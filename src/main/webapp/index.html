@@ -1,10 +1,198 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Start Page</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    </head>
-    <body>
-        <h1>hi kmk alem</h1>
-    </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pusak Kamek - Home</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --brand-maroon: #7a0019;
+            --white: #ffffff;
+        }
+
+        /* --- Font Normalization --- */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 16px; /* Sets a baseline for the whole page */
+        }
+
+        /* --- Navbar Styles (Unified) --- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background-color: var(--brand-maroon);
+            color: white;
+        }
+
+        .logo-text { 
+            font-weight: bold; 
+            line-height: 1.2; 
+            font-size: 18px; /* Consistent logo size */
+        }
+        
+        .logo-text small { 
+            font-weight: normal; 
+            font-size: 12px; 
+        }
+
+        .navbar nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px; /* Reduced gap slightly to fit Login buttons */
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px; /* Forced consistent size */
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        /* Highlight for the active page (Home) */
+        .nav-link-active {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Auth Buttons Styling */
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-outline {
+            color: white;
+            text-decoration: none;
+            border: 1px solid white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .btn-outline:hover {
+            background-color: white;
+            color: var(--brand-maroon);
+        }
+
+        /* --- Rest of Home Page Styles --- */
+        .page-wrapper {
+            background-color: var(--white);
+            min-height: 80vh;
+            padding: 60px 5%;
+        }
+
+        .hero-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero-content h1 {
+            font-size: 48px;
+            color: var(--brand-maroon);
+            margin-bottom: 20px;
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            color: #444;
+            max-width: 500px;
+            margin-bottom: 30px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-main {
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-view {
+            background-color: var(--brand-maroon);
+            color: white;
+        }
+
+        .btn-how {
+            background-color: #f0f0f0;
+            color: var(--brand-maroon);
+        }
+
+        .kitten-card img {
+            width: 100%;
+            max-width: 450px;
+            border-radius: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 900px) {
+            .hero-flex { flex-direction: column; text-align: center; }
+            .hero-content p { margin: 0 auto 30px; }
+            .hero-actions { justify-content: center; }
+            .navbar nav { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo-text">
+            PUSAK KAMEK<br>
+            <small>Rescue - Rehome - Rebuild</small>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="nav-link-active">Home</a></li>
+                <li><a href="stories.html">Stories</a></li>
+                <li><a href="petbrowse.html">Pet</a></li>
+                <li><a href="adopt.html">Adopt</a></li>
+                <li><a href="foster-details.html">Foster</a></li>
+                <li><a href="donation.html">Donate</a></li>
+                <li><a href="volunteer.html">Volunteer</a></li>
+            </ul>
+        </nav>
+        <div class="auth-buttons">
+            <a href="login.html" class="btn-outline">Login</a>
+            <a href="#" class="btn-outline">Sign up</a>
+        </div>
+    </header>
+
+    <main class="page-wrapper">
+        <div class="container hero-flex"> 
+            <div class="hero-content">
+                <h1>Find Your New Best Friend</h1>
+                <p>Adopt, don’t shop. Give a loving pet a second chance at life. Explore our available pets and begin your adoption today.</p>
+                <div class="hero-actions">
+                    <a href="petbrowse.html" class="btn-main btn-view">View Pets</a>
+                    <a href="support.html" class="btn-main btn-how">How Adoption Works</a>
+                </div>
+            </div>
+
+            <div class="kitten-card">
+                <img src="https://images.unsplash.com/photo-1592194996308-7b43878e84a6?auto=format&fit=crop&q=80&w=800" alt="Adoptable Kitten">
+            </div>
+        </div>
+    </main>
+
+    <footer class="bottom-bar"></footer>
+
+</body>
 </html>
