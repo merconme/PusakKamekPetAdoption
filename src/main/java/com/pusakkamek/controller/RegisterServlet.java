@@ -4,7 +4,7 @@ import com.pusakkamek.dao.UserDAO;
 import com.pusakkamek.model.User;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.annotation.*;
 import java.io.IOException;
 
 @WebServlet("/RegisterServlet")
@@ -17,16 +17,34 @@ public class RegisterServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        User user = new User();
-        user.setFullname(request.getParameter("fullname"));
-        user.setUsername(request.getParameter("username"));
-        user.setPhone(request.getParameter("phone"));
-        user.setPassword(request.getParameter("password"));
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+        String password = request.getParameter("password");
+        String confirmPassword = request.getParameter("confirmPassword");
 
-        userDAO.insert(user);
-        response.sendRedirect("login.jsp");
+        if (!password.equals(confirmPassword)) {
+            request.setAttribute("error", "Passwords do not match!");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
+        }
+
+        User user = new User();
+        user.setName(name);
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setPassword(password);
+
+        boolean success = userDAO.register(user);
+
+        if (success) {
+            response.sendRedirect("login.jsp");
+        } else {
+            request.setAttribute("error", "Registration failed. Try again!");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+        }
     }
 }

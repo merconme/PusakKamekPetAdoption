@@ -4,7 +4,7 @@ import com.pusakkamek.dao.UserDAO;
 import com.pusakkamek.model.User;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.annotation.*;
 import java.io.IOException;
 
 @WebServlet("/LoginServlet")
@@ -17,20 +17,20 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String username = request.getParameter("username");
+        String emailOrPhone = request.getParameter("username"); // your login field
         String password = request.getParameter("password");
 
-        User user = userDAO.login(username, password);
+        User user = userDAO.login(emailOrPhone, password);
 
         if (user != null) {
             HttpSession session = request.getSession();
             session.setAttribute("currentUser", user);
             response.sendRedirect("profile.jsp");
         } else {
-            request.setAttribute("error", "Invalid username or password!");
+            request.setAttribute("error", "Invalid email/phone or password!");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }

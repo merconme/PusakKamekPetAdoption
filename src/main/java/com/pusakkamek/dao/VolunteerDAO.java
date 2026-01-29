@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VolunteerDAO {
-    private final String jdbcURL = "jdbc:mysql://localhost:3306/pusakkamekdb";
+    private final String jdbcURL = "jdbc:mysql://localhost:3306/pusak_kamek";
     private final String jdbcUsername = "root";
-    private final String jdbcPassword = "password";
+    private final String jdbcPassword = "";
 
     private static final String INSERT_VOLUNTEER_SQL = 
         "INSERT INTO volunteers (name, email, age, role, availability) VALUES (?, ?, ?, ?, ?)";

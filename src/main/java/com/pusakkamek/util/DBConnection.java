@@ -9,7 +9,7 @@ import java.sql.DriverManager;
 
 public class DBConnection {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/pusakkamek";
+    private static final String URL = "jdbc:mysql://localhost:3306/pusak_kamek";
     private static final String USER = "root";      // your MySQL username
     private static final String PASSWORD = "";      // your MySQL password
 
