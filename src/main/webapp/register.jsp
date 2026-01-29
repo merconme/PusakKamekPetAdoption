@@ -1,11 +1,4 @@
-<%-- 
-    Document   : register
-    Created on : 27 Jan 2026, 3:54:39 am
-    Author     : USER
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,37 +13,38 @@
         <h1>Welcome to Pusak Kamek</h1>
         <p>Create an account to get started.</p>
 
-        <form>
+        <!-- Registration form submits to RegisterServlet -->
+        <form action="RegisterServlet" method="post">
             <div class="register-field">
                 <label>Full Name</label>
-                <input type="text" placeholder="Your Name" required>
+                <input type="text" name="fullname" placeholder="Your Name" required>
             </div>
 
             <div class="register-field">
                 <label>Email</label>
-                <input type="email" placeholder="email@domain.com" required>
+                <input type="email" name="email" placeholder="email@domain.com" required>
             </div>
 
             <div class="register-field">
                 <label>Phone Number</label>
-                <input type="tel" placeholder="012-3456789" required>
+                <input type="tel" name="phone" placeholder="012-3456789" required>
             </div>
 
             <div class="register-field">
                 <label>Password</label>
-                <input type="password" placeholder="••••••••" required>
+                <input type="password" name="password" placeholder="••••••••" required>
             </div>
 
             <div class="register-field">
                 <label>Confirm Password</label>
-                <input type="password" placeholder="••••••••" required>
+                <input type="password" name="confirmPassword" placeholder="••••••••" required>
             </div>
 
             <button type="submit" class="btn-register">Register Now</button>
         </form>
 
         <div class="register-footer">
-            Already registered? <a href="login.html">Login</a>
+            Already registered? <a href="login.jsp">Login</a>
         </div>
     </div>
 

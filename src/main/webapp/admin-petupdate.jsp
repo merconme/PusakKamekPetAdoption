@@ -1,268 +1,93 @@
-<%-- 
-    Document   : admin-petupdate
-    Created on : 27 Jan 2026, 3:47:19 am
-    Author     : USER
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="com.pusakkamek.model.Pet"%>
+
+<%
+    Pet pet = (Pet) request.getAttribute("pet");
+%>
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pet Management - Pusak Kamek Admin</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Update Pet - Admin</title>
     <style>
-        :root {
-            --brand-maroon: #7a0019;
-            --brand-maroon-light: #96102b;
-            --shadow: 0 10px 30px rgba(0,0,0,0.15);
-        }
-
         body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background: radial-gradient(circle at top, var(--brand-maroon-light), var(--brand-maroon));
-            background-attachment: fixed;
-            color: white;
-            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
         }
-
-        /* --- NAVBAR --- */
-        .navbar {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 5%; height: 80px; background: white; 
-            position: fixed; top: 0; left: 0; width: 100%;
-            box-sizing: border-box; z-index: 1000; box-shadow: var(--shadow);
-        }
-        .logo-section { display: flex; align-items: center; gap: 12px; color: var(--brand-maroon); }
-        .logo-circle { background: var(--brand-maroon); color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; }
-        .logo-text { font-weight: 800; line-height: 1.1; font-size: 18px; }
-        .nav-links { display: flex; list-style: none; gap: 5px; margin: 0; padding: 0; }
-        .nav-links a { color: #555; text-decoration: none; font-weight: 600; font-size: 14px; padding: 10px 18px; border-radius: 10px; transition: 0.3s; }
-        .nav-links a:hover { background: #f8f8f8; color: var(--brand-maroon); }
-        .nav-active { background: var(--brand-maroon) !important; color: white !important; }
-        .admin-profile { display: flex; align-items: center; gap: 10px; color: var(--brand-maroon); font-weight: 700; }
-        .profile-icon { width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-
-        /* --- CONTAINERS --- */
-        .container { max-width: 1400px; margin: 100px auto 50px; padding: 0 5%; position: relative; z-index: 1; }
-        
-        /* --- HEADER SECTION --- */
-        .header-area {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .header-area h1 {
-            font-size: 32px;
-            font-weight: 800;
-            margin: 0;
-        }
-
-        .back-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(5px);
-        }
-
-        .back-btn:hover {
+        .container {
+            width: 500px;
+            margin: 60px auto;
             background: white;
-            color: var(--brand-maroon);
-            transform: translateX(-5px);
+            padding: 30px;
+            border-radius: 10px;
         }
-
-        .section-title {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.2);
-            padding-bottom: 10px; margin-top: 20px;
+        h2 {
+            text-align: center;
+            color: #7a0019;
         }
-
-        /* --- CATEGORIES & CARDS --- */
-        .category-scroll {
-            display: flex; gap: 20px; overflow-x: auto; padding: 10px 0 30px;
-            scrollbar-width: none;
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
         }
-        .category-scroll::-webkit-scrollbar { display: none; }
-
-        .mini-cat-card {
-            flex: 0 0 160px; background: white; color: #333;
-            border-radius: 20px; text-align: center; padding: 15px;
-            cursor: pointer; transition: 0.3s; box-shadow: var(--shadow);
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
         }
-        .mini-cat-card:hover { transform: translateY(-5px); background: #fdf0f1; }
-        .mini-cat-card img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; }
-        .mini-cat-card h4 { margin: 0; font-size: 16px; color: var(--brand-maroon); }
-
-        .add-mini-card {
-            flex: 0 0 160px; border: 2px dashed rgba(255,255,255,0.4);
-            border-radius: 20px; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; cursor: pointer; transition: 0.3s;
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background: #7a0019;
+            color: white;
+            border: none;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
         }
-        .add-mini-card:hover { background: rgba(255,255,255,0.1); border-color: white; }
-
-        .pet-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px; margin-top: 20px;
-        }
-        .pet-card {
-            background: white; color: #333; border-radius: 25px;
-            overflow: hidden; box-shadow: var(--shadow); transition: 0.3s;
-        }
-        .pet-card img { width: 100%; height: 200px; object-fit: cover; }
-        .pet-info { padding: 20px; }
-        .pet-info h3 { margin: 0 0 10px; color: var(--brand-maroon); }
-        .pet-tag { 
-            display: inline-block; padding: 4px 12px; border-radius: 20px;
-            font-size: 11px; font-weight: 700; background: #eee; margin-right: 5px; margin-bottom: 5px;
-        }
-
-        .edit-btn {
-            width: 100%; padding: 10px; border-radius: 10px; 
-            border: 1px solid var(--brand-maroon); color: var(--brand-maroon); 
-            background: none; font-weight: 700; cursor: pointer; transition: 0.3s;
-        }
-        .edit-btn:hover { background: var(--brand-maroon); color: white; }
-
-        .floating-add {
-            background: #fff; color: var(--brand-maroon);
-            padding: 12px 25px; border-radius: 50px; font-weight: 800;
-            display: flex; align-items: center; gap: 10px;
-            cursor: pointer; box-shadow: var(--shadow); transition: 0.3s;
-        }
-        .floating-add:hover { transform: scale(1.05); background: #fdf0f1; }
-
-        /* --- MODALS --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
-            display: none; justify-content: center; align-items: center; z-index: 2000;
-        }
-        .modal-content {
-            background: white; color: #333; padding: 40px; border-radius: 30px;
-            width: 90%; max-width: 800px; display: flex; gap: 30px; position: relative;
-            max-height: 90vh; overflow-y: auto;
-        }
-        .close-btn { position: absolute; top: 20px; right: 25px; cursor: pointer; font-size: 28px; color: #ccc; transition: 0.3s; }
-        
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; flex: 1; }
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-size: 12px; font-weight: 700; color: #777; margin-bottom: 5px; text-transform: uppercase; }
-        .form-group input, .form-group select { padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-family: inherit; }
-        
-        .submit-btn { 
-            grid-column: span 2; background: var(--brand-maroon); color: white; 
-            border: none; padding: 15px; border-radius: 12px; font-weight: 700; 
-            cursor: pointer; margin-top: 10px; transition: 0.3s;
+        button:hover {
+            background: #5a0012;
         }
     </style>
 </head>
 <body>
 
-    <header class="navbar">
-        <div class="logo-section">
-            <div class="logo-circle">PK</div>
-            <div class="logo-text">PUSAK KAMEK<br><small style="font-weight: 400; font-size: 10px; color: #777;">ADMIN PANEL</small></div>
-        </div>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="admin-index.html">Dashboard</a></li>
-                <li><a href="upload-stories.html">Stories</a></li>
-                <li><a href="add-petbrowse.html" class="nav-active">Pets</a></li>
-                <li><a href="adopt-history.html">Adoptions</a></li>
-            </ul>
-        </nav>
-        <div class="admin-profile"><span>Admin</span><div class="profile-icon">👤</div></div>
-    </header>
+<div class="container">
+    <h2>Update Pet</h2>
 
-    <div class="container">
-        
-        <div class="header-area">
-            <h1>Pet Check-ins</h1>
-            <a href="admin-index.html" class="back-btn">
-                <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
-            </a>
-        </div>
+    <form action="adminPet" method="post">
 
-        <div class="section-title">
-            <h2>Pet Categories</h2>
-            <small style="color: #ffcad4;">Filter by Species</small>
-        </div>
+        <!-- IMPORTANT -->
+        <input type="hidden" name="id" value="<%= pet.getId() %>">
 
-        <div class="category-scroll">
-            <div class="mini-cat-card">
-                <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200" alt="Cats">
-                <h4>Cats</h4>
-            </div>
-            <div class="mini-cat-card">
-                <img src="https://images.unsplash.com/photo-1543466835-00a7907e9ef1?w=200" alt="Dogs">
-                <h4>Dogs</h4>
-            </div>
-            <div class="add-mini-card" onclick="toggleModal('categoryModal', true)">
-                <span style="font-size: 24px;">+</span>
-                <span style="font-size: 12px; font-weight: 600;">Add Category</span>
-            </div>
-        </div>
+        <label>Pet Name</label>
+        <input type="text" name="name" value="<%= pet.getName() %>" required>
 
-        <div class="section-title">
-            <h2>Current Residents</h2>
-            <div class="floating-add" onclick="toggleModal('petModal', true)">
-                <i class="fa-solid fa-plus"></i> Add New Pet
-            </div>
-        </div>
+        <label>Species</label>
+        <select name="species">
+            <option value="Dog" <%= pet.getSpecies().equals("Dog") ? "selected" : "" %>>Dog</option>
+            <option value="Cat" <%= pet.getSpecies().equals("Cat") ? "selected" : "" %>>Cat</option>
+        </select>
 
-        <div class="pet-grid">
-            <div class="pet-card">
-                <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400" alt="Mimi">
-                <div class="pet-info">
-                    <h3>Mimi</h3>
-                    <div style="margin-bottom: 15px;">
-                        <span class="pet-tag">CAT</span>
-                        <span class="pet-tag">2 YEARS</span>
-                    </div>
-                    <button class="edit-btn" onclick="toggleModal('petModal', true)">Edit Details</button>
-                </div>
-            </div>
-        </div>
-    </div>
+        <label>Age (Years)</label>
+        <input type="number" name="age" value="<%= pet.getAge() %>" required>
 
-    <div class="modal-overlay" id="petModal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="toggleModal('petModal', false)">&times;</span>
-            <div class="form-grid">
-                <h2 style="grid-column: span 2; margin: 0; color: var(--brand-maroon);">Pet Information</h2>
-                <div class="form-group"><label>Pet Name</label><input type="text" placeholder="e.g. Luna"></div>
-                <div class="form-group"><label>Age</label><input type="text" placeholder="e.g. 1 Year"></div>
-                <button class="submit-btn" onclick="toggleModal('petModal', false)">Save Pet Entry</button>
-            </div>
-        </div>
-    </div>
+        <label>Status</label>
+        <select name="status">
+            <option value="Available" <%= pet.getStatus().equals("Available") ? "selected" : "" %>>Available</option>
+            <option value="Adopted" <%= pet.getStatus().equals("Adopted") ? "selected" : "" %>>Adopted</option>
+            <option value="Pending" <%= pet.getStatus().equals("Pending") ? "selected" : "" %>>Pending</option>
+        </select>
 
-    <script>
-        function toggleModal(modalId, show) {
-            const modal = document.getElementById(modalId);
-            modal.style.display = show ? 'flex' : 'none';
-            document.body.style.overflow = show ? 'hidden' : 'auto';
-        }
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal-overlay')) {
-                event.target.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
-        }
-    </script>
+        <label>Image URL</label>
+        <input type="text" name="image" value="<%= pet.getImageUrl() %>">
+
+        <button type="submit">Update Pet</button>
+    </form>
+</div>
+
 </body>
 </html>

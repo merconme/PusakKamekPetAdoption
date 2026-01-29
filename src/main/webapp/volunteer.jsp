@@ -1,11 +1,4 @@
-<%-- 
-    Document   : volunteer
-    Created on : 27 Jan 2026, 3:56:41 am
-    Author     : USER
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +13,6 @@
             --light-bg: #fdf2f4;
         }
 
-        /* --- Global Font Normalization --- */
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -28,7 +20,6 @@
             background-color: var(--light-bg);
         }
 
-        /* --- Navbar Styles (Unified) --- */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -61,13 +52,12 @@
             color: white;
             text-decoration: none;
             font-weight: 500;
-            font-size: 16px; /* Consistency Fix */
+            font-size: 16px;
             padding: 8px 16px;
             border-radius: 20px;
             transition: 0.3s;
         }
 
-        /* Highlight for the active page (Volunteer) */
         .nav-link-active {
             background-color: rgba(0, 0, 0, 0.2);
         }
@@ -79,7 +69,6 @@
             cursor: pointer;
         }
 
-        /* --- Page Layout --- */
         .page-wrapper {
             padding: 60px 5%;
         }
@@ -109,7 +98,6 @@
             margin-bottom: 20px;
         }
 
-        /* Process Grid */
         .process-section {
             margin-top: 50px;
         }
@@ -195,17 +183,17 @@
         </div>
         <nav>
             <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="stories.html">Stories</a></li>
-                <li><a href="petbrowse.html">Pet</a></li>
-                <li><a href="adopt.html">Adopt</a></li>
-                <li><a href="foster-details.html">Foster</a></li>
-                <li><a href="donation.html">Donate</a></li>
-                <li><a href="volunteer.html" class="nav-link-active">Volunteer</a></li>
+                <li><a href="index.jsp">Home</a></li>
+                <li><a href="stories.jsp">Stories</a></li>
+                <li><a href="petbrowse.jsp">Pet</a></li>
+                <li><a href="adopt.jsp">Adopt</a></li>
+                <li><a href="foster-details.jsp">Foster</a></li>
+                <li><a href="donation.jsp">Donate</a></li>
+                <li><a href="volunteer.jsp" class="nav-link-active">Volunteer</a></li>
             </ul>
         </nav>
         <div class="user-profile-icon">
-            <a href="profile.html">👤</a>
+            <a href="profile.jsp">👤</a>
         </div>
     </header>
 
@@ -253,7 +241,7 @@
                 </div>
 
                 <div style="text-align: center; margin-top: 40px;">
-                    <a href="volunteer-details.html" class="btn-main">View Requirements & Roles</a>
+                    <a href="volunteer-details.jsp" class="btn-main">View Requirements & Roles</a>
                 </div>
             </div>
 

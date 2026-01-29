@@ -3,9 +3,79 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
    version="6.0">
+
     <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
+        <session-timeout>30</session-timeout>
     </session-config>
+
+    <!-- Pet Servlet -->
+    <servlet>
+        <servlet-name>PetServlet</servlet-name>
+        <servlet-class>com.pusakkamek.controller.PetServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PetServlet</servlet-name>
+        <url-pattern>/pets</url-pattern>
+    </servlet-mapping>
+
+    <!-- Volunteer Servlet -->
+    <servlet>
+        <servlet-name>VolunteerServlet</servlet-name>
+        <servlet-class>com.pusakkamek.controller.VolunteerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>VolunteerServlet</servlet-name>
+        <url-pattern>/volunteers</url-pattern>
+    </servlet-mapping>
+
+    <!-- Donation Servlet -->
+    <servlet>
+        <servlet-name>DonationServlet</servlet-name>
+        <servlet-class>com.pusakkamek.controller.DonationServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DonationServlet</servlet-name>
+        <url-pattern>/donations</url-pattern>
+    </servlet-mapping>
+
+    <!-- Adoption Servlet -->
+    <servlet>
+        <servlet-name>AdoptionServlet</servlet-name>
+        <servlet-class>com.pusakkamek.controller.AdoptionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdoptionServlet</servlet-name>
+        <url-pattern>/adoptions</url-pattern>
+    </servlet-mapping>
+
+    <!-- Foster Servlet -->
+    <servlet>
+        <servlet-name>FosterServlet</servlet-name>
+        <servlet-class>com.pusakkamek.controller.FosterServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FosterServlet</servlet-name>
+        <url-pattern>/fosters</url-pattern>
+    </servlet-mapping>
+
+    <!-- Medical Records Servlet -->
+    <servlet>
+        <servlet-name>MedicalRecordServlet</servlet-name>
+        <servlet-class>com.pusakkamek.controller.MedicalRecordServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MedicalRecordServlet</servlet-name>
+        <url-pattern>/medicalrecords</url-pattern>
+    </servlet-mapping>
+
+    <!-- Admin Login Servlet -->
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>com.pusakkamek.controller.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+
 </web-app>

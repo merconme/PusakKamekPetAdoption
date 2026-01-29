@@ -4,7 +4,7 @@
     Author     : USER
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +18,6 @@
             --beige-bg: #FFF8DC;
         }
 
-        /* --- Global Font Normalization --- */
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -26,7 +25,6 @@
             background-color: var(--beige-bg);
         }
 
-        /* --- Navbar Styles (Unified) --- */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -36,16 +34,8 @@
             color: white;
         }
 
-        .logo-text { 
-            font-weight: bold; 
-            line-height: 1.2; 
-            font-size: 18px; 
-        }
-        
-        .logo-text small { 
-            font-weight: normal; 
-            font-size: 12px; 
-        }
+        .logo-text { font-weight: bold; line-height: 1.2; font-size: 18px; }
+        .logo-text small { font-weight: normal; font-size: 12px; }
 
         .navbar nav ul {
             display: flex;
@@ -59,13 +49,12 @@
             color: white;
             text-decoration: none;
             font-weight: 500;
-            font-size: 16px; /* Consistency Fix */
+            font-size: 16px;
             padding: 8px 16px;
             border-radius: 20px;
             transition: 0.3s;
         }
 
-        /* Highlight for the active page (Donate) */
         .nav-link-active {
             background-color: rgba(0, 0, 0, 0.2);
         }
@@ -77,15 +66,8 @@
             cursor: pointer;
         }
 
-        /* --- Page Layout --- */
-        .page-wrapper {
-            padding: 60px 5%;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
+        .page-wrapper { padding: 60px 5%; }
+        .container { max-width: 800px; margin: 0 auto; }
 
         h1 {
             color: var(--brand-maroon);
@@ -94,7 +76,6 @@
             text-align: center;
         }
 
-        /* Donation Card Styling */
         .donation-card {
             background: white;
             padding: 40px;
@@ -110,10 +91,7 @@
             margin-bottom: 25px;
         }
 
-        .donation-list {
-            list-style: none;
-            padding: 0;
-        }
+        .donation-list { list-style: none; padding: 0; }
 
         .donation-list li {
             font-size: 18px;
@@ -139,39 +117,39 @@
 </head>
 <body>
 
-    <header class="navbar">
-        <div class="logo-text">PUSAK KAMEK<br><small>Rescue - Rehome - Rebuild</small></div>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="stories.html">Stories</a></li>
-                <li><a href="petbrowse.html">Pet</a></li>
-                <li><a href="adopt.html">Adopt</a></li>
-                <li><a href="foster-details.html">Foster</a></li>
-                <li><a href="donation.html" class="nav-link-active">Donate</a></li>
-                <li><a href="volunteer.html">Volunteer</a></li>
+<header class="navbar">
+    <div class="logo-text">PUSAK KAMEK<br><small>Rescue - Rehome - Rebuild</small></div>
+    <nav>
+        <ul>
+            <li><a href="index.jsp">Home</a></li>
+            <li><a href="stories.jsp">Stories</a></li>
+            <li><a href="petbrowse.jsp">Pet</a></li>
+            <li><a href="adopt.jsp">Adopt</a></li>
+            <li><a href="foster-details.jsp">Foster</a></li>
+            <li><a href="donation.jsp" class="nav-link-active">Donate</a></li>
+            <li><a href="volunteer.jsp">Volunteer</a></li>
+        </ul>
+    </nav>
+    <div class="user-profile-icon">
+        <a href="profile.jsp">👤</a>
+    </div>
+</header>
+
+<main class="page-wrapper">
+    <div class="container">
+        <h1>How Your Donation Makes a Difference</h1>
+
+        <div class="donation-card">
+            <h2 class="donation-header">Where Your Donation Goes</h2>
+            <ul class="donation-list">
+                <li>Medical treatment for injured or sick animals</li>
+                <li>Daily meals, treats and clean water</li>
+                <li>Rescue missions for abandoned or abused pets</li>
+                <li>Shelter maintenance and cleaning supplies</li>
             </ul>
-        </nav>
-        <div class="user-profile-icon">
-            <a href="profile.html">👤</a>
         </div>
-    </header>
-
-    <main class="page-wrapper">
-        <div class="container">
-            <h1>How Your Donation Makes a Difference</h1>
-
-            <div class="donation-card">
-                <h2 class="donation-header">Where Your Donation Goes</h2>
-                <ul class="donation-list">
-                    <li>Medical treatment for injured or sick animals</li>
-                    <li>Daily meals, treats and clean water</li>
-                    <li>Rescue missions for abandoned or abused pets</li>
-                    <li>Shelter maintenance and cleaning supplies</li>
-                </ul>
-            </div>
-        </div>
-    </main>
+    </div>
+</main>
 
 </body>
 </html>

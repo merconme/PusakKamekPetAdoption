@@ -1,11 +1,4 @@
-<%-- 
-    Document   : stories
-    Created on : 27 Jan 2026, 3:54:50 am
-    Author     : USER
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,7 +18,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
         }
 
-        /* --- Navbar Styles (Matched to Profile Page) --- */
+        /* --- Navbar Styles --- */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -55,7 +48,6 @@
             transition: 0.3s;
         }
 
-        /* Highlight for the active page */
         .nav-link-active {
             background-color: rgba(0, 0, 0, 0.2);
         }
@@ -152,17 +144,17 @@
         <div class="logo-text">PUSAK KAMEK<br><small>Rescue - Rehome - Rebuild</small></div>
         <nav>
             <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="stories.html" class="nav-link-active">Stories</a></li>
-                <li><a href="petbrowse.html">Pet</a></li>
-                <li><a href="adopt.html">Adopt</a></li>
-                <li><a href="foster.html">Foster</a></li>
-                <li><a href="donate.html">Donate</a></li>
-                <li><a href="volunteer.html">Volunteer</a></li>
+                <li><a href="index.jsp">Home</a></li>
+                <li><a href="stories.jsp" class="nav-link-active">Stories</a></li>
+                <li><a href="petbrowse.jsp">Pet</a></li>
+                <li><a href="adopt.jsp">Adopt</a></li>
+                <li><a href="foster.jsp">Foster</a></li>
+                <li><a href="donate.jsp">Donate</a></li>
+                <li><a href="volunteer.jsp">Volunteer</a></li>
             </ul>
         </nav>
         <div class="user-profile-icon">
-            <a href="profile.html">👤</a>
+            <a href="profile.jsp">👤</a>
         </div>
     </header>
 

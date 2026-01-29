@@ -4,7 +4,7 @@
     Author     : USER
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,7 +25,6 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* --- Navbar Styles (Unified) --- */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -55,7 +54,6 @@
             transition: 0.3s;
         }
 
-        /* Highlight for the active page */
         .nav-link-active {
             background-color: rgba(0, 0, 0, 0.2);
         }
@@ -68,7 +66,6 @@
             transition: 0.3s;
         }
 
-        /* --- Edit Container --- */
         .edit-wrapper {
             background-color: white;
             margin: 20px auto;
@@ -86,7 +83,6 @@
             margin-bottom: 30px;
         }
 
-        /* --- Form Styles --- */
         .edit-form {
             display: flex;
             flex-direction: column;
@@ -184,64 +180,36 @@
 </head>
 <body>
 
-    <header class="navbar">
-        <div class="logo-text">PUSAK KAMEK<br><small>Rescue - Rehome - Rebuild</small></div>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="stories.html">Stories</a></li>
-                <li><a href="user-pet-checkin.html">Pet</a></li>
-                <li><a href="adopt.html">Adopt</a></li>
-                <li><a href="foster.html">Foster</a></li>
-                <li><a href="donate.html">Donate</a></li>
-                <li><a href="volunteer.html">Volunteer</a></li>
-            </ul>
-        </nav>
-        <div class="user-profile-icon">
-            <a href="profile.html">👤</a>
-        </div>
-    </header>
+<header class="navbar">
+    <div class="logo-text">PUSAK KAMEK<br><small>Rescue - Rehome - Rebuild</small></div>
+    <nav>
+        <ul>
+            <li><a href="index.jsp">Home</a></li>
+            <li><a href="stories.jsp">Stories</a></li>
+            <li><a href="user-pet-checkin.jsp">Pet</a></li>
+            <li><a href="adopt.jsp">Adopt</a></li>
+            <li><a href="foster.jsp">Foster</a></li>
+            <li><a href="donate.jsp">Donate</a></li>
+            <li><a href="volunteer.jsp">Volunteer</a></li>
+        </ul>
+    </nav>
+    <div class="user-profile-icon">
+        <a href="profile.jsp">👤</a>
+    </div>
+</header>
 
-    <main>
-        <div class="edit-wrapper">
-            <div class="header-flex">
-                <h2 style="font-size: 32px; margin: 0;">Edit Profile</h2>
-                <a href="profile.html" style="color: #666;"><i class="fa-solid fa-xmark fa-2x"></i></a>
+<main>
+    <div class="edit-wrapper">
+        <div class="header-flex">
+            <h2 style="font-size: 32px; margin: 0;">Edit Profile</h2>
+            <a href="profile.jsp" style="color: #666;"><i class="fa-solid fa-xmark fa-2x"></i></a>
+        </div>
+
+        <form class="edit-form" action="profile.jsp" method="post" enctype="multipart/form-data">
+            <div class="profile-upload-section">
+                <img src="https://images.unsplash.com/photo-1503777119540-ce54b422baff?q=80&w=200" alt="User Image">
+                <div class="change-photo-btn">Change Profile Photo</div>
             </div>
 
-            <form class="edit-form" action="profile.html">
-                <div class="profile-upload-section">
-                    <img src="https://images.unsplash.com/photo-1503777119540-ce54b422baff?q=80&w=200" alt="User Image">
-                    <div class="change-photo-btn">Change Profile Photo</div>
-                </div>
-
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" value="Ariana Lee" placeholder="Enter your name">
-                </div>
-
-                <div class="form-group">
-                    <label>Phone Number</label>
-                    <input type="tel" value="012-3456789" placeholder="Enter phone number">
-                </div>
-
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" value="arianalee@gmail.com" placeholder="Enter email">
-                </div>
-
-                <div class="form-group">
-                    <label>Address</label>
-                    <input type="text" value="Kuching, Sarawak" placeholder="Enter address">
-                </div>
-
-                <div class="button-group">
-                    <button type="submit" class="save-btn">Save Changes</button>
-                    <a href="profile.html" class="cancel-btn">Cancel</a>
-                </div>
-            </form>
-        </div>
-    </main>
-
-</body>
-</html>
+            <div class="form-group">
+                <label>Full Name</label>

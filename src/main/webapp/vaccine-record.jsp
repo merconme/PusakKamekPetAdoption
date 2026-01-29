@@ -1,11 +1,4 @@
-<%-- 
-    Document   : vaccine-record
-    Created on : 27 Jan 2026, 3:55:39 am
-    Author     : USER
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,7 +52,7 @@
 
 <div class="container">
     <div class="header">
-        <a href="petbrowse.html" class="back-btn">← Back to Gallery</a>
+        <a href="petbrowse.jsp" class="back-btn">← Back to Gallery</a>
         <h1>Medical Database</h1>
         <p>Vaccination & Immunization Tracking</p>
     </div>
@@ -136,7 +129,6 @@
     let activeSpecies = 'all';
 
     function filterSpecies(species, btn) {
-        // Update button styles
         const buttons = document.getElementsByClassName('filter-btn');
         for (let b of buttons) b.classList.remove('active');
         btn.classList.add('active');

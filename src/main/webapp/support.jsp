@@ -1,11 +1,4 @@
-<%-- 
-    Document   : support
-    Created on : 27 Jan 2026, 3:55:02 am
-    Author     : USER
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,18 +13,18 @@
         <div class="logo-text">PUSAK KAMEK<br><small>Rescue - Rehome - Rebuild</small></div>
         <nav>
             <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="support.html" class="nav-link-active">Stories</a></li>
-                <li><a href="#">Pet</a></li>
-                <li><a href="#">Adopt</a></li>
-                <li><a href="foster-details.html">Foster</a></li>
-                <li><a href="donation.html">Donate</a></li>
-                <li><a href="volunteer.html">Volunteer</a></li>
+                <li><a href="index.jsp">Home</a></li>
+                <li><a href="support.jsp" class="nav-link-active">Stories</a></li>
+                <li><a href="petbrowse.jsp">Pet</a></li>
+                <li><a href="adopt.jsp">Adopt</a></li>
+                <li><a href="foster-details.jsp">Foster</a></li>
+                <li><a href="donation.jsp">Donate</a></li>
+                <li><a href="volunteer.jsp">Volunteer</a></li>
             </ul>
         </nav>
         <div class="auth-buttons">
-            <a href="login.html" class="btn-outline">Login</a>
-            <a href="#" class="btn-outline">Sign up</a>
+            <a href="login.jsp" class="btn-outline">Login</a>
+            <a href="register.jsp" class="btn-outline">Sign up</a>
         </div>
     </header>
 
@@ -43,19 +36,19 @@
                 <div class="help-card">
                     <h3>Donate</h3>
                     <p>Support medical care, food and shelter for rescued animals.</p>
-                    <a href="donation.html" class="btn-main btn-how">How Donation Works</a>
+                    <a href="donation.jsp" class="btn-main btn-how">How Donation Works</a>
                 </div>
 
                 <div class="help-card">
                     <h3>Foster</h3>
                     <p>Offer a temporary home while pets recover and wait for adoption.</p>
-                    <a href="#" class="btn-main btn-how">How Fostering Works</a>
+                    <a href="foster-details.jsp" class="btn-main btn-how">How Fostering Works</a>
                 </div>
 
                 <div class="help-card">
                     <h3>Volunteer</h3>
                     <p>Train with our programmes and join daily care or events.</p>
-                    <a href="volunteer.html" class="btn-main btn-how">How Volunteering Works</a>
+                    <a href="volunteer.jsp" class="btn-main btn-how">How Volunteering Works</a>
                 </div>
             </div>
 
@@ -66,7 +59,7 @@
                 </div>
                 <div class="contact-info-card">
                     <p><strong>Address:</strong> Pusak Kamek Lot 284<br>
-                    (Ground Floor Sec.12 KTLD, Jln Haji Taha, Kampung Bandarshah, 93400 Kuching, Sarawak</p>
+                    (Ground Floor Sec.12 KTLD, Jln Haji Taha, Kampung Bandarshah, 93400 Kuching, Sarawak)</p>
                     <p><strong>Phone:</strong> 012-3456789</p>
                     <p><strong>Email:</strong> pusakkamek@gmail.com</p>
                 </div>
