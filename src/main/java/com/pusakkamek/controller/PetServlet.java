@@ -1,11 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.pusakkamek.controller;
 
 import com.pusakkamek.dao.PetDAO;
 import com.pusakkamek.model.Pet;
+import com.pusakkamek.model.User;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,21 +12,45 @@ import java.util.List;
 
 @WebServlet("/petbrowse")
 public class PetServlet extends HttpServlet {
+
     private PetDAO dao;
 
-    public void init() {
-        dao = new PetDAO();
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    @Override
+    public void init() throws ServletException {
         try {
-            List<Pet> list = dao.getAllPets();
-            request.setAttribute("pets", list);
-            request.getRequestDispatcher("petbrowse.jsp").forward(request, response);
+            dao = new PetDAO();  // now wrapped in try-catch
         } catch (SQLException e) {
-            throw new ServletException(e);
+            throw new ServletException("Failed to initialize PetDAO", e);
         }
     }
-}
 
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // Ensure user is logged in
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        String searchQuery = request.getParameter("search"); // get search parameter
+        List<Pet> pets;
+
+        try {
+            if (searchQuery != null && !searchQuery.isEmpty()) {
+                pets = dao.searchPets(searchQuery); // search by name/species/breed
+            } else {
+                pets = dao.getAllPets();
+            }
+        } catch (Exception e) {
+            throw new ServletException("Error fetching pets from database", e);
+        }
+
+        request.setAttribute("pets", pets);
+        request.setAttribute("currentUser", currentUser); // pass user to JSP
+        request.getRequestDispatcher("petbrowse.jsp").forward(request, response);
+    }
+}

@@ -9,6 +9,7 @@ import java.io.IOException;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
+
     private UserDAO userDAO;
 
     @Override
@@ -20,7 +21,7 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String emailOrPhone = request.getParameter("username"); // your login field
+        String emailOrPhone = request.getParameter("username");
         String password = request.getParameter("password");
 
         User user = userDAO.login(emailOrPhone, password);
@@ -28,7 +29,7 @@ public class LoginServlet extends HttpServlet {
         if (user != null) {
             HttpSession session = request.getSession();
             session.setAttribute("currentUser", user);
-            response.sendRedirect("profile.jsp");
+            response.sendRedirect("index.jsp");
         } else {
             request.setAttribute("error", "Invalid email/phone or password!");
             request.getRequestDispatcher("login.jsp").forward(request, response);

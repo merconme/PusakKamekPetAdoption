@@ -4,58 +4,67 @@ import com.pusakkamek.model.User;
 import java.sql.*;
 
 public class UserDAO {
-
     private String jdbcURL = "jdbc:mysql://localhost:3306/pusak_kamek";
-    private String jdbcUsername = "root"; // change if needed
-    private String jdbcPassword = "";     // change if needed
+    private String jdbcUsername = "root"; // your DB username
+    private String jdbcPassword = "";     // your DB password
 
-    private Connection getConnection() throws SQLException {
+    private static final String INSERT_USER_SQL =
+        "INSERT INTO users (name, email, phone, password) VALUES (?, ?, ?, ?)";
+
+    private static final String LOGIN_USER_SQL =
+        "SELECT * FROM users WHERE (email = ? OR phone = ?) AND password = ?";
+
+    public UserDAO() {}
+
+    protected Connection getConnection() throws SQLException {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
     }
 
     // Register new user
-    public boolean register(User user) {
-        String sql = "INSERT INTO users (name, email, phone, password) VALUES (?, ?, ?, ?)";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+    public boolean registerUser(User user) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER_SQL)) {
 
-            stmt.setString(1, user.getName());
-            stmt.setString(2, user.getEmail());
-            stmt.setString(3, user.getPhone());
-            stmt.setString(4, user.getPassword()); // optional: hash password
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getEmail());
+            preparedStatement.setString(3, user.getPhone());
+            preparedStatement.setString(4, user.getPassword());
 
-            int rows = stmt.executeUpdate();
-            return rows > 0;
-
+            int row = preparedStatement.executeUpdate();
+            return row > 0;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
 
-    // Login user
+    // Login method
     public User login(String emailOrPhone, String password) {
-        String sql = "SELECT * FROM users WHERE (email=? OR phone=?) AND password=?";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        User user = null;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(LOGIN_USER_SQL)) {
 
-            stmt.setString(1, emailOrPhone);
-            stmt.setString(2, emailOrPhone);
-            stmt.setString(3, password);
+            preparedStatement.setString(1, emailOrPhone);
+            preparedStatement.setString(2, emailOrPhone);
+            preparedStatement.setString(3, password);
 
-            ResultSet rs = stmt.executeQuery();
+            ResultSet rs = preparedStatement.executeQuery();
             if (rs.next()) {
-                User user = new User();
+                user = new User();
                 user.setId(rs.getInt("id"));
                 user.setName(rs.getString("name"));
                 user.setEmail(rs.getString("email"));
                 user.setPhone(rs.getString("phone"));
                 user.setPassword(rs.getString("password"));
-                return user;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return user;
     }
 }

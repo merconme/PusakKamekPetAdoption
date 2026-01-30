@@ -32,18 +32,13 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        User user = new User();
-        user.setName(name);
-        user.setEmail(email);
-        user.setPhone(phone);
-        user.setPassword(password);
-
-        boolean success = userDAO.register(user);
+        User user = new User(name, email, phone, password);
+        boolean success = userDAO.registerUser(user);
 
         if (success) {
             response.sendRedirect("login.jsp");
         } else {
-            request.setAttribute("error", "Registration failed. Try again!");
+            request.setAttribute("error", "Failed to register user!");
             request.getRequestDispatcher("register.jsp").forward(request, response);
         }
     }

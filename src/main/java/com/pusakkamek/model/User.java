@@ -7,6 +7,17 @@ public class User {
     private String phone;
     private String password;
 
+    // Constructors
+    public User() { }
+
+    public User(String name, String email, String phone, String password) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.password = password;
+    }
+
+    // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

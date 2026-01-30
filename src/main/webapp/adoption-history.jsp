@@ -1,6 +1,15 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.List"%>
 <%@page import="com.pusakkamek.model.Adoption"%>
+<%@ page import="com.pusakkamek.model.User" %>
+<%
+    // Check for logged-in user
+    User currentUser = (User) session.getAttribute("currentUser");
+    if (currentUser == null) {
+        response.sendRedirect("login.jsp"); // not logged in, redirect
+        return;
+    }
+%>
 
 <!DOCTYPE html>
 <html lang="en">
