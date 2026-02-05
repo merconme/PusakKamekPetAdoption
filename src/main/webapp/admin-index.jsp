@@ -154,7 +154,7 @@ h1{margin:0 0 6px;color:#222}
     <a class="active" href="<%= cp %>/admin/index">Dashboard</a>
     <a href="<%= cp %>/admin/adoptions">Adoptions</a>
     <a href="<%= cp %>/add-petbrowse.jsp">Pets</a>
-    <a href="<%= cp %>/LogoutServlet" style="color:#b00020;">Logout</a>
+    <a href="<%= cp %>/adminLogout" style="color:#b00020;">Logout</a>
   </div>
 </header>
 

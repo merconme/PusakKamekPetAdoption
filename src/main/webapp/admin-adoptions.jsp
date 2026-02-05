@@ -83,11 +83,11 @@ th{background:#fdf0f1;color:var(--brand);font-weight:900}
     <small>ADMIN PANEL</small>
   </div>
 
-  <div class="nav">
+   <div class="nav">
     <a href="<%= cp %>/admin/index">Dashboard</a>
     <a class="active" href="<%= cp %>/admin/adoptions">Adoptions</a>
     <a href="<%= cp %>/add-petbrowse.jsp">Pets</a>
-    <a href="<%= cp %>/LogoutServlet" style="color:#b00020;">Logout</a>
+    <a href="<%= cp %>/adminLogout" style="color:#b00020;">Logout</a>
   </div>
 </header>
 

@@ -9,6 +9,7 @@ public class Pet {
     private String vaccinationStatus;
     private String condition;
     private String neutered;
+    private String description;
     private String color;
     private String imageUrl;
     private String status; // AVAILABLE / ADOPTED
@@ -36,6 +37,10 @@ public class Pet {
 
     public String getNeutered() { return neutered; }
     public void setNeutered(String neutered) { this.neutered = neutered; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
 
     public String getColor() { return color; }
     public void setColor(String color) { this.color = color; }

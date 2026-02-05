@@ -111,21 +111,23 @@ public class PetDAO {
     // ================= ADD PET (INSERT) =================
 public boolean insertPet(Pet pet) throws SQLException {
 
-    String sql = "INSERT INTO pets " +
-            "(species, name, breed, age, vaccination_status, pet_condition, neutered, color, image_url, status) " +
-            "VALUES (?,?,?,?,?,?,?,?,?,?)";
+   String sql = "INSERT INTO pets (species, name, breed, age, vaccination_status, pet_condition, neutered, color, description, image_url, status) "
+           + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
 
     try (PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, pet.getSpecies());
-        ps.setString(2, pet.getName());
-        ps.setString(3, pet.getBreed());
-        ps.setInt(4, pet.getAge());
-        ps.setString(5, pet.getVaccinationStatus());
-        ps.setString(6, pet.getCondition());
-        ps.setString(7, pet.getNeutered());
-        ps.setString(8, pet.getColor());
-        ps.setString(9, pet.getImageUrl());
-        ps.setString(10, pet.getStatus());
+    ps.setString(2, pet.getName());
+    ps.setString(3, pet.getBreed());
+    ps.setInt(4, pet.getAge());
+    ps.setString(5, pet.getVaccinationStatus());
+    ps.setString(6, pet.getCondition());
+    ps.setString(7, pet.getNeutered());
+    ps.setString(8, pet.getColor());
+    ps.setString(9, pet.getDescription());
+    ps.setString(10, pet.getImageUrl());
+    ps.setString(11, pet.getStatus());
+
 
         return ps.executeUpdate() > 0;
     }

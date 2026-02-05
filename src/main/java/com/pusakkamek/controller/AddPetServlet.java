@@ -60,12 +60,13 @@ public class AddPetServlet extends HttpServlet {
 
         try {
             // ===== Read form inputs =====
-            String species = request.getParameter("species");
+            String species = request.getParameter("species"); 
             String name = request.getParameter("name");
             String breed = request.getParameter("breed");
             String vaccinationStatus = request.getParameter("vaccinationStatus");
             String condition = request.getParameter("condition");
-            String neutered = request.getParameter("neutered");
+            String neutered = request.getParameter("neutered");         
+            String description = request.getParameter("description");
             String color = request.getParameter("color");
 
             if (species == null || species.isBlank() || name == null || name.isBlank()) {
@@ -112,13 +113,15 @@ public class AddPetServlet extends HttpServlet {
 
             // ===== Save to DB =====
             Pet pet = new Pet();
-            pet.setSpecies(species.trim());
+            pet.setSpecies(species);
             pet.setName(name.trim());
             pet.setBreed(breed);
             pet.setAge(age);
             pet.setVaccinationStatus(vaccinationStatus);
             pet.setCondition(condition);
             pet.setNeutered(neutered);
+            pet.setSpecies(species);
+            pet.setDescription(description);
             pet.setColor(color);
             pet.setImageUrl(savedFileName); // filename only
             pet.setStatus("AVAILABLE");

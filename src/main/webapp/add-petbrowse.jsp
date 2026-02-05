@@ -45,7 +45,6 @@
             --bg: #f7f7f7;
         }
 
-        /* ✅ match admin-adoptions look: light background */
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
@@ -54,7 +53,7 @@
             min-height: 100vh;
         }
 
-        /* ✅ NAVBAR (SAME AS admin-adoptions.jsp) */
+        /* ✅ NAVBAR */
         .navbar{
             display:flex;
             justify-content:space-between;
@@ -78,7 +77,6 @@
         .nav a:hover{ background:#fdf0f1; color:var(--brand-maroon); }
         .nav a.active{ background:var(--brand-maroon); color:#fff !important; }
 
-        /* content wrap */
         .container {
             max-width: 1400px;
             margin: 22px auto 60px;
@@ -110,31 +108,6 @@
             margin: 26px 0 14px;
         }
         .section-title h2 { margin:0; color:#111; }
-        .section-title small { color:#777; font-weight:700; }
-
-        .category-scroll {
-            display:flex;
-            gap:16px;
-            overflow-x:auto;
-            padding: 10px 0 18px;
-            scrollbar-width:none;
-        }
-        .category-scroll::-webkit-scrollbar { display:none; }
-
-        .mini-cat-card {
-            flex:0 0 160px;
-            background:#fff;
-            color:#333;
-            border-radius:18px;
-            text-align:center;
-            padding:14px;
-            cursor:pointer;
-            transition:0.25s;
-            box-shadow:var(--shadow);
-            border:1px solid #eee;
-        }
-        .mini-cat-card:hover { transform:translateY(-4px); background:#fdf0f1; }
-        .mini-cat-card h4 { margin:0; font-size:16px; color:var(--brand-maroon); }
 
         /* pets grid */
         .pet-grid {
@@ -186,6 +159,7 @@
             font-weight:900;
             cursor:pointer;
             transition:0.25s;
+            margin-top: 12px;
         }
         .edit-btn:hover { background:var(--brand-maroon); color:#fff; }
 
@@ -226,7 +200,7 @@
         }
         .empty b { color: var(--brand-maroon); }
 
-        /* modal (kept your style) */
+        /* modal */
         .modal-overlay {
             position:fixed; top:0; left:0; width:100%; height:100%;
             background:rgba(0,0,0,0.85);
@@ -260,11 +234,13 @@
             font-size:12px; font-weight:900; color:#777;
             margin-bottom:6px; text-transform:uppercase;
         }
-        .form-group input, .form-group select {
+
+        /* ✅ include textarea */
+        .form-group input, .form-group select, .form-group textarea {
             padding:12px; border-radius:12px; border:1px solid #ddd; font-family:inherit;
             outline:none;
         }
-        .form-group input:focus, .form-group select:focus {
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             border-color:#caa1aa;
             box-shadow:0 0 0 3px rgba(122,0,25,.10);
         }
@@ -302,7 +278,6 @@
 </head>
 <body>
 
-<!-- Navbar now matches admin-adoptions.jsp -->
 <header class="navbar">
     <div class="brand">
         PUSAK KAMEK
@@ -313,7 +288,7 @@
         <a href="<%= cp %>/admin/index">Dashboard</a>
         <a href="<%= cp %>/admin/adoptions">Adoptions</a>
         <a class="active" href="<%= cp %>/add-petbrowse.jsp">Pets</a>
-        <a href="<%= cp %>/LogoutServlet" style="color:#b00020;">Logout</a>
+        <a href="<%= cp %>/adminLogout" style="color:#b00020;">Logout</a>
     </div>
 </header>
 
@@ -329,7 +304,6 @@
         <div class="alert err">❌ Failed to save pet. (Check GlassFish log for details.)</div>
     <% } %>
 
-    <!-- Pets -->
     <div class="section-title">
         <h2>Current Residents</h2>
         <div class="floating-add" onclick="toggleModal('petModal', true)">
@@ -345,8 +319,15 @@
         <div class="pet-grid">
             <% for(Pet p : pets) { %>
                 <div class="pet-card">
+
+                    <%
+                        String img = (p.getImageUrl() == null || p.getImageUrl().trim().isEmpty())
+                                ? "no-image.png"
+                                : p.getImageUrl();
+                    %>
+
                     <!-- ✅ ImageServlet -->
-                    <img src="<%= cp %>/images/<%= p.getImageUrl() %>" alt="<%= p.getName() %>">
+                    <img src="<%= cp %>/images/<%= img %>" alt="<%= p.getName() %>">
 
                     <div class="pet-info">
                         <h3><%= p.getName() %></h3>
@@ -356,6 +337,13 @@
                             <span class="pet-tag"><%= p.getAge() %> YEARS</span>
                             <span class="pet-tag"><%= p.getStatus() %></span>
                         </div>
+
+                        <!-- ✅ SHOW DESCRIPTION -->
+                        <% if (p.getDescription() != null && !p.getDescription().trim().isEmpty()) { %>
+                            <p style="margin:0; font-size:12px; color:#555; line-height:1.45;">
+                                <b>Description:</b> <%= p.getDescription() %>
+                            </p>
+                        <% } %>
 
                         <button class="edit-btn" type="button" onclick="toggleModal('petModal', true)">
                             Add Another
@@ -383,13 +371,16 @@
         <form action="<%= cp %>/AddPetServlet" method="post" enctype="multipart/form-data" class="form-grid">
             <h2 style="grid-column: span 2; margin:0; color:var(--brand-maroon);">Pet Information</h2>
 
+            <!-- ✅ Species (free text + suggestions) -->
             <div class="form-group">
                 <label>Species</label>
-                <select name="species" required>
-                    <option value="Cat">Cat</option>
-                    <option value="Dog">Dog</option>
-                    <option value="Other">Other</option>
-                </select>
+                <input type="text" name="species" placeholder="e.g. Cat, Dog, Rabbit" list="speciesList" required>
+                <datalist id="speciesList">
+                    <option value="Cat">
+                    <option value="Dog">
+                    <option value="Rabbit">
+                    <option value="Bird">
+                </datalist>
             </div>
 
             <div class="form-group">
@@ -425,6 +416,13 @@
             <div class="form-group">
                 <label>Color</label>
                 <input type="text" name="color" placeholder="White/Brown">
+            </div>
+
+            <!-- ✅ Description (full width) -->
+            <div class="form-group" style="grid-column: span 2;">
+                <label>Description</label>
+                <textarea name="description" rows="3"
+                          placeholder="e.g. Friendly, rescued, likes kids, special needs..."></textarea>
             </div>
 
             <div class="form-group" style="grid-column: span 2;">
