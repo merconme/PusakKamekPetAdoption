@@ -1,50 +1,120 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.pusakkamek.dao;
 
-import com.pusakkamek.model.Adoption;
+import com.pusakkamek.model.AdoptionApplication;
+import com.pusakkamek.util.DBConnection;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdoptionDAO {
 
-    public List<Adoption> getAll() {
-        List<Adoption> list = new ArrayList<>();
-        String sql = "SELECT * FROM adoptions";
+    private final Connection conn;
 
-        try (Connection conn = DBConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+    public AdoptionDAO() throws SQLException {
+        conn = DBConnection.getConnection();
+    }
 
-            while (rs.next()) {
-                Adoption a = new Adoption();
-                a.setId(rs.getInt("id"));
-                a.setUserId(rs.getInt("userId"));
-                a.setPetId(rs.getInt("petId"));
-                a.setStatus(rs.getString("status"));
-                list.add(a);
+    // ✅ USER APPLY
+    public boolean insertApplication(AdoptionApplication a) throws SQLException {
+
+        String sql = "INSERT INTO adoption_applications " +
+                "(pet_id, user_id, full_name, phone, email, address, reason, status) " +
+                "VALUES (?,?,?,?,?,?,?, 'PENDING')";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, a.getPetId());
+            ps.setInt(2, a.getUserId());
+            ps.setString(3, a.getFullName());
+            ps.setString(4, a.getPhone());
+            ps.setString(5, a.getEmail());
+            ps.setString(6, a.getAddress());
+            ps.setString(7, a.getReason());
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    // ✅ USER HISTORY (My Adoptions)
+    public List<AdoptionApplication> getByUserId(int userId) throws SQLException {
+
+        List<AdoptionApplication> list = new ArrayList<>();
+
+        String sql =
+                "SELECT a.*, p.name AS pet_name " +
+                "FROM adoption_applications a " +
+                "JOIN pets p ON a.pet_id = p.id " +
+                "WHERE a.user_id = ? " +
+                "ORDER BY a.created_at DESC";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    AdoptionApplication a = map(rs);
+                    a.setPetName(rs.getString("pet_name"));
+                    list.add(a);
+                }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return list;
     }
 
-    public void insert(Adoption a) {
-        String sql = "INSERT INTO adoptions (userId, petId, status) VALUES (?,?,?)";
+    // ✅ ADMIN LIST (Admin see all applications)
+    public List<AdoptionApplication> getAllForAdmin() throws SQLException {
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        List<AdoptionApplication> list = new ArrayList<>();
 
-            pstmt.setInt(1, a.getUserId());
-            pstmt.setInt(2, a.getPetId());
-            pstmt.setString(3, a.getStatus());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        String sql =
+                "SELECT a.*, p.name AS pet_name " +
+                "FROM adoption_applications a " +
+                "JOIN pets p ON a.pet_id = p.id " +
+                "ORDER BY a.created_at DESC";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                AdoptionApplication a = map(rs);
+                a.setPetName(rs.getString("pet_name"));
+                list.add(a);
+            }
         }
+        return list;
+    }
+
+    // ✅ ADMIN: update application status
+    public boolean updateStatus(int applicationId, String status) throws SQLException {
+        String sql = "UPDATE adoption_applications SET status=? WHERE id=?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, applicationId);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    // ✅ OPTIONAL: mark pet adopted
+    public boolean markPetAdopted(int petId) throws SQLException {
+        String sql = "UPDATE pets SET status='ADOPTED' WHERE id=?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, petId);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    // ✅ mapper
+    private AdoptionApplication map(ResultSet rs) throws SQLException {
+        AdoptionApplication a = new AdoptionApplication();
+        a.setId(rs.getInt("id"));
+        a.setPetId(rs.getInt("pet_id"));
+        a.setUserId(rs.getInt("user_id"));
+        a.setFullName(rs.getString("full_name"));
+        a.setPhone(rs.getString("phone"));
+        a.setEmail(rs.getString("email"));
+        a.setAddress(rs.getString("address"));
+        a.setReason(rs.getString("reason"));
+        a.setStatus(rs.getString("status"));
+        try { a.setCreatedAt(rs.getTimestamp("created_at")); } catch (Exception ignored) {}
+        return a;
     }
 }

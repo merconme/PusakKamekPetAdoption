@@ -1,19 +1,19 @@
 package com.pusakkamek.controller;
 
 import com.pusakkamek.dao.AdoptionDAO;
-import com.pusakkamek.model.AdoptionApplication;
 import com.pusakkamek.model.Admin;
+import com.pusakkamek.model.AdoptionApplication;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet("/AdoptionServlet")
-public class AdoptionServlet extends HttpServlet {
+@WebServlet("/admin/adoptions")
+public class AdminAdoptionsServlet extends HttpServlet {
 
     private AdoptionDAO adoptionDAO;
 
@@ -41,10 +41,11 @@ public class AdoptionServlet extends HttpServlet {
         }
 
         try {
+            // ✅ IMPORTANT: use getAllForAdmin()
             List<AdoptionApplication> list = adoptionDAO.getAllForAdmin();
 
             request.setAttribute("adoptionList", list);
-            request.getRequestDispatcher("/adopt.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin-adoptions.jsp").forward(request, response);
 
         } catch (SQLException e) {
             throw new ServletException(e);

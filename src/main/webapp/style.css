@@ -20,66 +20,887 @@ body {
     overflow-x: hidden;
 }
 
-/* --- 2. SHARED NAVIGATION BAR --- */
-.navbar {
-    background-color: #7a0019; /* Deep burgundy */
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 27 Jan 2026, 3:58:45 am
+    Author     : USER
+*/
+
+/* --- 1. GENERAL RESET & BASE STYLES --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: #fdfdfd;
+    overflow-x: hidden;
+}
+
+
+/* --- 3. SHARED LAYOUT CONTAINERS --- */
+.page-wrapper {
+    position: relative;
+    min-height: calc(100vh - 60px);
+    background: linear-gradient(rgba(255,255,255,0.4), rgba(255,255,255,0.4)), 
+                url('https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=2000');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    padding: 40px 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title {
+    color: #6a0016;
+    font-size: 32px;
+    margin-bottom: 25px;
+    font-weight: 800;
+}
+
+/* --- 4. INDEX HERO SPECIFIC (Page 1) --- */
+.hero-flex {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 60px;
-    color: white;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    gap: 40px;
 }
 
-.logo-text {
-    line-height: 1.2;
-    text-transform: uppercase;
+.hero-content {
+    flex: 1;
+    max-width: 550px;
+}
+
+.hero-content h1 {
+    font-size: 52px;
+    color: #6a0016;
+    line-height: 1.1;
+    margin-bottom: 25px;
     font-weight: 800;
-    font-size: 14px;
 }
 
-.logo-text small {
-    display: block;
-    font-weight: 400;
-    font-size: 10px;
-    text-transform: none;
+.hero-content p {
+    font-size: 24px;
+    color: #6a0016;
+    margin-bottom: 35px;
 }
 
-nav ul {
+.hero-actions {
     display: flex;
+    gap: 20px;
+}
+
+.btn-main {
+    text-decoration: none;
+    padding: 16px 32px;
+    border-radius: 18px;
+    font-weight: bold;
+    font-size: 18px;
+    border: 2.5px solid #6a0016;
+    display: inline-block;
+    transition: transform 0.2s;
+}
+
+.btn-main:hover { transform: translateY(-2px); }
+
+.btn-view { background-color: #c9b091; color: #4a3728; }
+.btn-how { background-color: #f7e9e9; color: #6a0016; }
+
+.kitten-card {
+    width: 380px;
+    height: 450px;
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.kitten-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* --- 5. SUPPORT GRIDS & CONTACT (Page 2) --- */
+.help-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 50px;
+}
+
+.help-card {
+    background: white;
+    padding: 40px 20px;
+    border-radius: 30px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.help-card h3 { color: #6a0016; font-size: 28px; margin-bottom: 15px; }
+
+.contact-flex {
+    display: flex;
+    gap: 30px;
+    align-items: stretch;
+}
+
+.map-box {
+    flex: 1;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.map-box img { width: 100%; height: 100%; object-fit: cover; }
+
+.contact-info-card {
+    flex: 1.5;
+    background: white;
+    padding: 40px;
+    border-radius: 35px;
+    color: #6a0016;
+    font-size: 18px;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+/* --- 6. DONATION IMPACT (Page 3) --- */
+.donation-card {
+    background-color: #fff5f6; /* Very light pink */
+    width: 100%;
+    padding: 50px;
+    border-radius: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+.donation-header {
+    color: #6a0016;
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 25px;
+}
+
+.donation-list {
     list-style: none;
+    display: inline-block;
+    text-align: left;
+}
+
+.donation-list li {
+    color: #6a0016;
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+/* --- 7. VOLUNTEER PROCESS (Page 4) --- */
+.process-section {
+    background-color: white;
+    padding: 40px;
+    border-radius: 40px;
+    margin-top: 20px;
+    text-align: left;
+}
+
+.process-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.process-card {
+    flex: 1;
+    border: 2px solid #7a0019;
+    border-radius: 15px;
+    padding: 20px 15px;
+    text-align: center;
+    background: white;
+}
+
+.process-number {
+    font-size: 40px;
+    font-weight: 800;
+    color: #7a0019;
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* --- VOLUNTEER ROLES & REQUIREMENTS (Page 5) --- */
+.requirements-grid {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.info-card {
+    flex: 1;
+    background-color: #e0ced2; /* Muted pink/grey from screenshot */
+    padding: 30px;
+    border-radius: 40px;
+    color: #6a0016;
+}
+
+.info-card h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+.info-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.info-card ul li {
+    margin-bottom: 15px;
+    font-size: 16px;
+    line-height: 1.4;
+    position: relative;
+    padding-left: 30px;
+}
+
+/* Custom checkmark for requirements */
+.info-card ul li::before {
+    content: '✔';
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-weight: bold;
+    border: 2px solid #6a0016;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+/* Call to Action Banner */
+.cta-banner {
+    background-color: #a33241; /* Deep red-pink */
+    color: white;
+    padding: 40px;
+    border-radius: 40px;
+    text-align: center;
+}
+
+.cta-banner h2 { font-size: 32px; margin-bottom: 10px; }
+.cta-banner p { font-size: 20px; margin-bottom: 30px; }
+
+.btn-gold {
+    background-color: #e6b87d; /* Gold/Tan color */
+    color: #6a0016;
+    border: none;
+    padding: 18px 40px;
+    font-size: 24px;
+    border-radius: 25px;
+    font-weight: 800;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* --- FOSTER SPECIFIC LAYOUT --- */
+.foster-row {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    margin-bottom: 60px;
+    background: rgba(255, 255, 255, 0.7); /* Glass effect */
+    padding: 30px;
+    border-radius: 40px;
+}
+
+.foster-row.reverse {
+    flex-direction: row-reverse;
+}
+
+.foster-text {
+    flex: 1;
+}
+
+.foster-text h2 {
+    color: #6a0016;
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.foster-image {
+    flex: 1;
+    height: 300px;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.foster-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.foster-list {
+    list-style: none;
+    padding: 0;
+}
+
+.foster-list li {
+    margin-bottom: 12px;
+    color: #4a3728;
+    font-size: 17px;
+    line-height: 1.5;
+}
+
+/* --- COMPACT MODERN SPLIT-LOGIN --- */
+.login-body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #7a0019;
+    font-family: 'Inter', sans-serif;
+}
+
+.split-login-card {
+    display: flex;
+    width: 800px; /* Reduced from 1000px */
+    height: 480px; /* Reduced from 600px */
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px; /* Slightly tighter corners */
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
+}
+
+/* Left side: Image */
+.login-visual {
+    flex: 1;
+}
+
+.login-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Right side: Compact Form Area */
+.login-glass-form {
+    flex: 1.1; /* Slightly more space for the form side */
+    background: white; 
+    padding: 40px; /* Reduced padding for a tighter feel */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: black;
+}
+
+.login-glass-form h1 {
+    font-size: 26px; /* Scaled down */
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.login-glass-form p {
+    font-size: 13px;
+    opacity: 0.7;
+    margin-bottom: 30px;
+}
+
+.modern-input-group {
+    margin-bottom: 18px;
+}
+
+.modern-input-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+
+.modern-input-group input {
+    width: 100%;
+    padding: 12px 16px; /* Tighter inputs */
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.modern-input-group input:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #7a0019;
+}
+
+.btn-signin {
+    width: 100%;
+    padding: 14px;
+    background: #7a0019;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 5px;
+}
+
+
+.login-options {
+    margin-top: 25px;
+    text-align: center;
+    font-size: 12px;
+}
+
+.login-options a {
+    color: black;
+    text-decoration: none;
+    opacity: 0.6;
+    transition: 0.2s;
+}
+
+.login-options a:hover {
+    opacity: 1;
+}
+
+/* --- EXTRA COMPACT WHITE FORM --- */
+.register-body {
+    background-color: #7a0019; /* Solid Burgundy */
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.compact-register-card {
+    background-color: white;
+    width: 360px; /* Reduced width for a smaller, sleeker look */
+    padding: 25px 30px; /* Tighter padding */
+    border-radius: 24px; /* More rounded corners */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.compact-register-card h1 {
+    color: #000000;
+    font-size: 22px; /* Slightly smaller header */
+    margin-bottom: 4px;
+    font-weight: 800;
+}
+
+.compact-register-card p {
+    color: #777;
+    font-size: 12px;
+    margin-bottom: 20px;
+}
+
+.register-field {
+    text-align: left;
+    margin-bottom: 12px; /* Reduced gap between fields */
+}
+
+.register-field label {
+    display: block;
+    color: #000000;
+    font-size: 11px; /* Smaller, crisp labels */
+    font-weight: 700;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.register-field input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid #eee; /* Lighter, thinner border */
+    border-radius: 10px;
+    font-size: 13px;
+    color: #333;
+    background-color: #fafafa; /* Very subtle grey background */
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.register-field input:focus {
+    border-color: #7a0019;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(122, 0, 25, 0.1);
+}
+
+.btn-register {
+    width: 100%;
+    background-color: #7a0019;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 8px;
+    text-transform: uppercase;
+    transition: transform 0.2s, background 0.3s;
+}
+
+.btn-register:hover {
+    background-color: #5a0012;
+    transform: translateY(-1px);
+}
+
+.register-footer {
+    margin-top: 18px;
+    font-size: 12px;
+    color: #444;
+}
+
+.register-footer a {
+    color: #7a0019;
+    text-decoration: none;
+    font-weight: 800;
+}
+
+/* --- FOSTER APPLICATION FORM STYLES --- */
+.form-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.form-header h1 {
+    font-size: 36px;
+    color: #000;
+    margin-bottom: 10px;
+}
+
+.form-header p {
+    font-size: 16px;
+    color: #333;
+}
+
+.application-form {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: span 2;
+}
+
+.form-group label {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.form-group input, 
+.form-group select {
+    padding: 12px 20px;
+    border: 3px solid #7a0019; /* Thick burgundy border from design */
+    border-radius: 15px;
+    font-size: 16px;
+    outline: none;
+}
+
+/* Checkbox Section */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 3px solid #7a0019;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 30px 0;
+}
+
+.checkbox-container input {
+    width: 20px;
+    height: 20px;
+    accent-color: #7a0019;
+}
+
+/* Button Group */
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.btn-submit {
+    background-color: #7a0019;
+    color: white;
+    padding: 15px 40px;
+    border-radius: 30px;
+    border: none;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-reset {
+    background-color: #a33241; /* Slightly lighter red for reset */
+    color: white;
+    padding: 15px 40px;
+    border-radius: 30px;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* --- PET PAGE BROWSE SECTION --- */
+.pet-category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+    padding: 40px 0;
+}
+
+.pet-card {
+    background: white;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    text-align: center;
+    cursor: pointer;
+}
+
+.pet-card:hover {
+    transform: translateY(-10px);
+}
+
+.pet-card-image {
+    height: 180px;
+    width: 100%;
+}
+
+.pet-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pet-card h3 {
+    padding: 15px 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: #000;
+}
+
+/* Search Bar Styling */
+.search-container {
+    max-width: 600px;
+    margin: 40px auto;
+    position: relative;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 15px 50px;
+    border-radius: 30px;
+    border: 2px solid #7a0019;
+    font-size: 18px;
+    outline: none;
+}
+
+.search-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+}
+
+/* Universal Pet Grid Layout */
+.pet-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    padding: 20px 0;
+}
+
+/* Individual Card Styling */
+.gallery-card {
+    background-color: white;
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.gallery-card-image {
+    height: 190px;
+    width: 100%;
+}
+
+.gallery-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gallery-card-content {
+    padding: 20px;
+    position: relative;
+    color: black;
+}
+
+.gallery-card-content p {
+    margin: 5px 0;
+    font-size: 16px;
+    font-weight: 800; /* Bold labels */
+}
+
+/* Icons (Plus and Bookmark) */
+.gallery-card-actions {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    display: flex;
+    flex-direction: column;
     gap: 15px;
 }
 
-nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
+.action-btn {
+    font-size: 24px;
+    cursor: pointer;
+    color: black;
 }
 
-.nav-link-active {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 6px 16px;
-    border-radius: 8px;
-}
 
-.auth-buttons {
+
+/* --- FILTER CONTROLS --- */
+.filter-wrapper {
     display: flex;
-    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin: 30px 0;
 }
 
-.btn-outline {
-    color: white;
-    text-decoration: none;
-    border: 1.5px solid white;
-    padding: 6px 18px;
-    border-radius: 8px;
+.search-bar {
+    position: relative;
+    flex: 2; /* Search bar takes more space */
+    min-width: 250px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border-radius: 30px;
+    border: none;
+    font-size: 16px;
+    outline: none;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.dropdown-group {
+    display: flex;
+    gap: 10px;
+    flex: 3;
+    justify-content: flex-end;
+}
+
+.dropdown-group select {
+    padding: 12px 15px;
+    border-radius: 30px;
+    border: none;
     font-size: 14px;
     font-weight: 600;
+    cursor: pointer;
+    background-color: white;
+    outline: none;
 }
+
+/* Redefine card content for bold labels */
+.gallery-card-content p {
+    margin: 4px 0;
+    font-weight: 800;
+    color: #000;
+    font-size: 15px;
+}
+
+/* --- PET SWITCHER TABS --- */
+.pet-switcher {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-top: 10px;
+}
+
+.switch-btn {
+    text-decoration: none;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: 800;
+    font-size: 14px;
+    color: #7a0019; /* Text color */
+    background-color: white; /* Default background */
+    transition: all 0.3s ease;
+    border: 2px solid white;
+}
+
+.switch-btn:hover {
+    transform: scale(1.05);
+    background-color: #f0f0f0;
+}
+
+
+/* --- 8. FOOTER --- */
+.bottom-bar {
+    height: 40px;
+    background-color: #7a0019;
+    width: 100%;
+}
+
+
 
 /* --- 3. SHARED LAYOUT CONTAINERS --- */
 .page-wrapper {

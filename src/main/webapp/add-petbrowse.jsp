@@ -1,192 +1,454 @@
-<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.pusakkamek.dao.PetDAO"%>
 <%@ page import="com.pusakkamek.model.Pet"%>
 <%@ page import="java.util.List"%>
-<%@ page import="com.pusakkamek.dao.CategoryDAO"%>
-<%@ page import="com.pusakkamek.model.Category"%>
+<%@ page import="com.pusakkamek.model.Admin"%>
+
+<%
+    String cp = request.getContextPath();
+
+    // ✅ Admin guard
+    Admin admin = (Admin) session.getAttribute("adminUser");
+    if (admin == null) {
+        response.sendRedirect(cp + "/admin-login.jsp");
+        return;
+    }
+
+    // ✅ Load pets
+    List<Pet> pets;
+    try {
+        PetDAO petDAO = new PetDAO();
+        pets = petDAO.getAllPets();
+    } catch (Exception e) {
+        pets = java.util.Collections.emptyList();
+    }
+
+    String ok = request.getParameter("ok");
+    String err = request.getParameter("err");
+%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pet Management - Pusak Kamek Admin</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --brand-maroon: #7a0019;
             --brand-maroon-light: #96102b;
-            --shadow: 0 10px 30px rgba(0,0,0,0.15);
+            --shadow: 0 10px 30px rgba(0,0,0,0.10);
+            --bg: #f7f7f7;
         }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top, var(--brand-maroon-light), var(--brand-maroon)); color: white; min-height: 100vh; }
-        .navbar { display:flex; justify-content:space-between; align-items:center; padding:0 5%; height:80px; background:white; position:fixed; top:0; left:0; width:100%; box-shadow:var(--shadow); z-index:1000; }
-        .logo-section { display:flex; align-items:center; gap:12px; color:var(--brand-maroon); }
-        .logo-circle { background: var(--brand-maroon); color:white; width:35px; height:35px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; }
-        .logo-text { font-weight:800; font-size:18px; line-height:1.1; }
-        .nav-links { display:flex; list-style:none; gap:5px; margin:0; padding:0; }
-        .nav-links a { color:#555; text-decoration:none; font-weight:600; font-size:14px; padding:10px 18px; border-radius:10px; transition:0.3s; }
-        .nav-links a:hover { background:#f8f8f8; color:var(--brand-maroon); }
-        .nav-active { background:var(--brand-maroon) !important; color:white !important; }
-        .admin-profile { display:flex; align-items:center; gap:10px; color:var(--brand-maroon); font-weight:700; }
-        .profile-icon { width:40px; height:40px; background:#eee; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; }
-        .container { max-width:1400px; margin:120px auto 50px; padding:0 5%; position:relative; z-index:1; }
-        .section-title { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid rgba(255,255,255,0.2); padding-bottom:10px; margin-top:40px; }
-        .btn-back { background: rgba(255,255,255,0.2); color:white; padding:8px 15px; border-radius:10px; text-decoration:none; font-size:13px; font-weight:600; display:flex; align-items:center; gap:8px; border:1px solid rgba(255,255,255,0.3); margin-bottom:20px; width:fit-content; transition:0.3s; }
-        .btn-back:hover { background:white; color:var(--brand-maroon); }
-        .category-scroll { display:flex; gap:20px; overflow-x:auto; padding:10px 0 30px; scrollbar-width:none; }
+
+        /* ✅ match admin-adoptions look: light background */
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: #222;
+            min-height: 100vh;
+        }
+
+        /* ✅ NAVBAR (SAME AS admin-adoptions.jsp) */
+        .navbar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:18px 6%;
+            background:#fff;
+            box-shadow:var(--shadow);
+        }
+        .brand{ font-weight:900; color:var(--brand-maroon); line-height:1.1; }
+        .brand small{ display:block; font-weight:600; color:#777; margin-top:2px; font-size:11px; }
+
+        .nav a{
+            margin-left:12px;
+            text-decoration:none;
+            color:#555;
+            font-weight:800;
+            padding:8px 14px;
+            border-radius:999px;
+            transition:.2s;
+        }
+        .nav a:hover{ background:#fdf0f1; color:var(--brand-maroon); }
+        .nav a.active{ background:var(--brand-maroon); color:#fff !important; }
+
+        /* content wrap */
+        .container {
+            max-width: 1400px;
+            margin: 22px auto 60px;
+            padding: 0 6%;
+        }
+
+        .btn-back {
+            background: #fff;
+            color: var(--brand-maroon);
+            padding: 10px 14px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #eee;
+            margin: 8px 0 16px;
+            transition: .2s;
+        }
+        .btn-back:hover { transform: translateY(-1px); background:#fdf0f1; }
+
+        .section-title {
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-end;
+            margin: 26px 0 14px;
+        }
+        .section-title h2 { margin:0; color:#111; }
+        .section-title small { color:#777; font-weight:700; }
+
+        .category-scroll {
+            display:flex;
+            gap:16px;
+            overflow-x:auto;
+            padding: 10px 0 18px;
+            scrollbar-width:none;
+        }
         .category-scroll::-webkit-scrollbar { display:none; }
-        .mini-cat-card { flex:0 0 160px; background:white; color:#333; border-radius:20px; text-align:center; padding:15px; cursor:pointer; transition:0.3s; box-shadow:var(--shadow); }
-        .mini-cat-card:hover { transform:translateY(-5px); background:#fdf0f1; }
-        .mini-cat-card img { width:60px; height:60px; border-radius:50%; object-fit:cover; margin-bottom:10px; }
+
+        .mini-cat-card {
+            flex:0 0 160px;
+            background:#fff;
+            color:#333;
+            border-radius:18px;
+            text-align:center;
+            padding:14px;
+            cursor:pointer;
+            transition:0.25s;
+            box-shadow:var(--shadow);
+            border:1px solid #eee;
+        }
+        .mini-cat-card:hover { transform:translateY(-4px); background:#fdf0f1; }
         .mini-cat-card h4 { margin:0; font-size:16px; color:var(--brand-maroon); }
-        .add-mini-card { flex:0 0 160px; border:2px dashed rgba(255,255,255,0.4); border-radius:20px; display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer; transition:0.3s; }
-        .add-mini-card:hover { background:rgba(255,255,255,0.1); border-color:white; }
-        .pet-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:25px; margin-top:20px; }
-        .pet-card { background:white; color:#333; border-radius:25px; overflow:hidden; box-shadow:var(--shadow); transition:0.3s; }
-        .pet-card img { width:100%; height:200px; object-fit:cover; }
-        .pet-info { padding:20px; }
+
+        /* pets grid */
+        .pet-grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+            gap:22px;
+            margin-top: 14px;
+        }
+
+        .pet-card {
+            background:#fff;
+            color:#333;
+            border-radius:22px;
+            overflow:hidden;
+            box-shadow:var(--shadow);
+            border:1px solid #eee;
+            transition:0.25s;
+        }
+        .pet-card:hover { transform: translateY(-5px); }
+
+        .pet-card img {
+            width:100%;
+            height:200px;
+            object-fit:cover;
+            background:#eee;
+        }
+
+        .pet-info { padding:18px; }
         .pet-info h3 { margin:0 0 10px; color:var(--brand-maroon); }
-        .pet-tag { display:inline-block; padding:4px 12px; border-radius:20px; font-size:11px; font-weight:700; background:#eee; margin-right:5px; margin-bottom:5px; }
-        .edit-btn { width:100%; padding:10px; border-radius:10px; border:1px solid var(--brand-maroon); color:var(--brand-maroon); background:none; font-weight:700; cursor:pointer; transition:0.3s; }
-        .edit-btn:hover { background:var(--brand-maroon); color:white; }
-        .floating-add { background:#fff; color:var(--brand-maroon); padding:12px 25px; border-radius:50px; font-weight:800; display:flex; align-items:center; gap:10px; cursor:pointer; box-shadow:var(--shadow); transition:0.3s; }
-        .floating-add:hover { transform:scale(1.05); background:#fdf0f1; }
-        .modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); display:none; justify-content:center; align-items:center; z-index:2000; }
-        .modal-content { background:white; color:#333; padding:40px; border-radius:30px; width:90%; max-width:800px; display:flex; gap:30px; position:relative; max-height:90vh; overflow-y:auto; }
-        .close-btn { position:absolute; top:20px; right:25px; cursor:pointer; font-size:28px; color:#ccc; transition:0.3s; }
+
+        .pet-tag {
+            display:inline-block;
+            padding:4px 12px;
+            border-radius:20px;
+            font-size:11px;
+            font-weight:800;
+            background:#f3f3f4;
+            margin-right:6px;
+            margin-bottom:6px;
+        }
+
+        .edit-btn {
+            width:100%;
+            padding:10px;
+            border-radius:12px;
+            border:1px solid var(--brand-maroon);
+            color:var(--brand-maroon);
+            background:none;
+            font-weight:900;
+            cursor:pointer;
+            transition:0.25s;
+        }
+        .edit-btn:hover { background:var(--brand-maroon); color:#fff; }
+
+        .floating-add {
+            background: var(--brand-maroon);
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-weight: 900;
+            display:flex;
+            align-items:center;
+            gap:10px;
+            cursor:pointer;
+            box-shadow: var(--shadow);
+            transition: .2s;
+        }
+        .floating-add:hover { background: var(--brand-maroon-light); transform: translateY(-1px); }
+
+        /* alerts */
+        .alert {
+            margin: 12px 0 18px;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-weight: 900;
+            font-size: 13px;
+            display:inline-block;
+        }
+        .alert.ok { background:#e8f7ee; color:#0b5f16; border:1px solid rgba(11,95,22,.15); }
+        .alert.err { background:#fde7e7; color:#8b0000; border:1px solid rgba(139,0,0,.15); }
+
+        .empty {
+            background:#fff;
+            padding:18px;
+            border-radius:18px;
+            box-shadow:var(--shadow);
+            border:1px solid #eee;
+            color:#555;
+        }
+        .empty b { color: var(--brand-maroon); }
+
+        /* modal (kept your style) */
+        .modal-overlay {
+            position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.85);
+            backdrop-filter:blur(8px);
+            display:none;
+            justify-content:center;
+            align-items:center;
+            z-index:2000;
+        }
+        .modal-content {
+            background:#fff; color:#333;
+            padding:36px;
+            border-radius:26px;
+            width:90%;
+            max-width:900px;
+            display:flex;
+            gap:26px;
+            position:relative;
+            max-height:90vh;
+            overflow-y:auto;
+        }
+        .close-btn {
+            position:absolute; top:18px; right:22px;
+            cursor:pointer; font-size:28px; color:#ccc; transition:0.3s;
+        }
         .close-btn:hover { color:var(--brand-maroon); }
-        .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:15px; flex:1; }
+
+        .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; flex:1; }
         .form-group { display:flex; flex-direction:column; }
-        .form-group label { font-size:12px; font-weight:700; color:#777; margin-bottom:5px; text-transform:uppercase; }
-        .form-group input, .form-group select { padding:12px; border-radius:10px; border:1px solid #ddd; font-family:inherit; }
-        .submit-btn { grid-column:span 2; background:var(--brand-maroon); color:white; border:none; padding:15px; border-radius:12px; font-weight:700; cursor:pointer; margin-top:10px; transition:0.3s; }
+        .form-group label {
+            font-size:12px; font-weight:900; color:#777;
+            margin-bottom:6px; text-transform:uppercase;
+        }
+        .form-group input, .form-group select {
+            padding:12px; border-radius:12px; border:1px solid #ddd; font-family:inherit;
+            outline:none;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color:#caa1aa;
+            box-shadow:0 0 0 3px rgba(122,0,25,.10);
+        }
+
+        .submit-btn {
+            grid-column:span 2;
+            background:var(--brand-maroon);
+            color:#fff;
+            border:none;
+            padding:14px;
+            border-radius:14px;
+            font-weight:900;
+            cursor:pointer;
+            margin-top:8px;
+            transition:0.25s;
+        }
         .submit-btn:hover { background:var(--brand-maroon-light); }
-        .upload-area { flex:0 0 200px; display:flex; flex-direction:column; align-items:center; }
-        .upload-placeholder { width:160px; height:160px; background:#f9f9f9; border:2px dashed #ddd; border-radius:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; color:#aaa; }
+
+        .upload-area { flex:0 0 220px; display:flex; flex-direction:column; align-items:center; }
+        .upload-placeholder {
+            width:180px; height:180px;
+            background:#f9f9f9;
+            border:2px dashed #ddd;
+            border-radius:22px;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            cursor:pointer;
+            color:#aaa;
+            text-align:center;
+            padding:12px;
+        }
     </style>
 </head>
 <body>
 
+<!-- Navbar now matches admin-adoptions.jsp -->
 <header class="navbar">
-    <div class="logo-section">
-        <div class="logo-circle">PK</div>
-        <div class="logo-text">PUSAK KAMEK<br><small style="font-weight:400; font-size:10px; color:#777;">ADMIN PANEL</small></div>
+    <div class="brand">
+        PUSAK KAMEK
+        <small>ADMIN PANEL</small>
     </div>
-    <nav>
-        <ul class="nav-links">
-            <li><a href="admin-index.jsp">Dashboard</a></li>
-            <li><a href="upload-stories.jsp">Stories</a></li>
-            <li><a href="add-petbrowse.jsp" class="nav-active">Pets</a></li>
-            <li><a href="adopt-history.jsp">Adoptions</a></li>
-        </ul>
-    </nav>
-    <div class="admin-profile"><span>Admin</span><div class="profile-icon">👤</div></div>
+
+    <div class="nav">
+        <a href="<%= cp %>/admin/index">Dashboard</a>
+        <a href="<%= cp %>/admin/adoptions">Adoptions</a>
+        <a class="active" href="<%= cp %>/add-petbrowse.jsp">Pets</a>
+        <a href="<%= cp %>/LogoutServlet" style="color:#b00020;">Logout</a>
+    </div>
 </header>
 
 <div class="container">
-    <a href="admin-index.jsp" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    <a href="<%= cp %>/admin/index" class="btn-back">
+        <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+    </a>
 
-    <!-- Categories -->
-    <div class="section-title">
-        <h2>Pet Categories</h2>
-        <small style="color:#ffcad4;">View or Add Species</small>
-    </div>
-    <div class="category-scroll">
-        <%
-            CategoryDAO catDAO = new CategoryDAO();
-            List<Category> categories = catDAO.selectAllCategories();
-            for(Category c : categories) {
-        %>
-        <div class="mini-cat-card">
-            <img src="<%= c.getImageUrl() %>" alt="<%= c.getName() %>">
-            <h4><%= c.getName() %></h4>
-        </div>
-        <% } %>
-        <div class="add-mini-card" onclick="toggleModal('categoryModal', true)">
-            <span style="font-size:24px;">+</span>
-            <span style="font-size:12px; font-weight:600;">Add Category</span>
-        </div>
-    </div>
+    <% if (ok != null) { %>
+        <div class="alert ok">✅ Pet saved successfully!</div>
+    <% } %>
+    <% if (err != null) { %>
+        <div class="alert err">❌ Failed to save pet. (Check GlassFish log for details.)</div>
+    <% } %>
 
     <!-- Pets -->
     <div class="section-title">
         <h2>Current Residents</h2>
-        <div class="floating-add" onclick="toggleModal('petModal', true)"><i class="fa-solid fa-plus"></i> Add New Pet</div>
-    </div>
-    <div class="pet-grid">
-        <%
-            PetDAO petDAO = new PetDAO();
-            List<Pet> pets = petDAO.selectAllPets();
-            for(Pet p : pets) {
-        %>
-        <div class="pet-card">
-            <img src="<%= p.getPhotoUrl() != null ? p.getPhotoUrl() : "default.jpg" %>" alt="<%= p.getName() %>">
-            <div class="pet-info">
-                <h3><%= p.getName() %></h3>
-                <div style="margin-bottom:15px;">
-                    <span class="pet-tag"><%= p.getSpecies() %></span>
-                    <span class="pet-tag"><%= p.getAge() %> YEARS</span>
-                </div>
-                <button class="edit-btn" onclick="toggleModal('petModal', true)">Edit Details</button>
-            </div>
+        <div class="floating-add" onclick="toggleModal('petModal', true)">
+            <i class="fa-solid fa-plus"></i> Add New Pet
         </div>
-        <% } %>
     </div>
+
+    <% if (pets == null || pets.isEmpty()) { %>
+        <div class="empty">
+            No pets found. Click <b>Add New Pet</b> to create your first listing.
+        </div>
+    <% } else { %>
+        <div class="pet-grid">
+            <% for(Pet p : pets) { %>
+                <div class="pet-card">
+                    <!-- ✅ ImageServlet -->
+                    <img src="<%= cp %>/images/<%= p.getImageUrl() %>" alt="<%= p.getName() %>">
+
+                    <div class="pet-info">
+                        <h3><%= p.getName() %></h3>
+
+                        <div style="margin-bottom:12px;">
+                            <span class="pet-tag"><%= p.getSpecies() %></span>
+                            <span class="pet-tag"><%= p.getAge() %> YEARS</span>
+                            <span class="pet-tag"><%= p.getStatus() %></span>
+                        </div>
+
+                        <button class="edit-btn" type="button" onclick="toggleModal('petModal', true)">
+                            Add Another
+                        </button>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    <% } %>
 </div>
 
 <!-- Add Pet Modal -->
 <div class="modal-overlay" id="petModal">
     <div class="modal-content">
         <span class="close-btn" onclick="toggleModal('petModal', false)">&times;</span>
+
         <div class="upload-area">
-            <div class="upload-placeholder"><i class="fa-solid fa-camera" style="font-size:30px; margin-bottom:10px;"></i><p style="font-size:10px; font-weight:700;">PHOTO</p></div>
+            <div class="upload-placeholder">
+                <i class="fa-solid fa-camera" style="font-size:30px; margin-bottom:10px;"></i>
+                <p style="font-size:11px; font-weight:900; margin:0;">PHOTO</p>
+                <p style="font-size:11px; margin:6px 0 0;">Select file in form</p>
+            </div>
         </div>
-        <form action="insert" method="post" enctype="multipart/form-data" class="form-grid">
+
+        <form action="<%= cp %>/AddPetServlet" method="post" enctype="multipart/form-data" class="form-grid">
             <h2 style="grid-column: span 2; margin:0; color:var(--brand-maroon);">Pet Information</h2>
-            <div class="form-group"><label>Category</label>
-                <select name="species">
-                    <%
-                        for(Category c : categories) {
-                    %>
-                        <option><%= c.getName() %></option>
-                    <% } %>
+
+            <div class="form-group">
+                <label>Species</label>
+                <select name="species" required>
+                    <option value="Cat">Cat</option>
+                    <option value="Dog">Dog</option>
+                    <option value="Other">Other</option>
                 </select>
             </div>
-            <div class="form-group"><label>Pet Name</label><input type="text" name="name" placeholder="e.g. Luna" required></div>
-            <div class="form-group"><label>Age</label><input type="number" name="age" placeholder="e.g. 1" required></div>
-            <div class="form-group"><label>Breed</label><input type="text" name="breed" placeholder="e.g. Persian"></div>
+
+            <div class="form-group">
+                <label>Pet Name</label>
+                <input type="text" name="name" placeholder="e.g. Luna" required>
+            </div>
+
+            <div class="form-group">
+                <label>Age</label>
+                <input type="number" name="age" min="0" placeholder="e.g. 1" required>
+            </div>
+
+            <div class="form-group">
+                <label>Breed</label>
+                <input type="text" name="breed" placeholder="e.g. Persian">
+            </div>
+
+            <div class="form-group">
+                <label>Vaccination Status</label>
+                <input type="text" name="vaccinationStatus" placeholder="Yes/No">
+            </div>
+
+            <div class="form-group">
+                <label>Condition</label>
+                <input type="text" name="condition" placeholder="Healthy">
+            </div>
+
+            <div class="form-group">
+                <label>Neutered</label>
+                <input type="text" name="neutered" placeholder="Yes/No">
+            </div>
+
+            <div class="form-group">
+                <label>Color</label>
+                <input type="text" name="color" placeholder="White/Brown">
+            </div>
+
+            <div class="form-group" style="grid-column: span 2;">
+                <label>Photo</label>
+                <input type="file" name="image" accept="image/*" required>
+            </div>
+
             <button type="submit" class="submit-btn">Save Pet Entry</button>
         </form>
     </div>
 </div>
 
-<!-- Add Category Modal -->
-<div class="modal-overlay" id="categoryModal">
-    <div class="modal-content" style="max-width:500px; flex-direction:column; align-items:center; text-align:center;">
-        <span class="close-btn" onclick="toggleModal('categoryModal', false)">&times;</span>
-        <h2 style="color:var(--brand-maroon); margin-bottom:10px;">New Category</h2>
-        <form action="insertCategory" method="post" enctype="multipart/form-data" style="width:100%;">
-            <div class="form-group" style="width:100%; margin-bottom:20px;">
-                <label>Category Name</label>
-                <input type="text" name="name" placeholder="e.g. Hamsters" required>
-            </div>
-            <button type="submit" class="submit-btn" style="width:100%;">Create Category</button>
-        </form>
-    </div>
-</div>
-
 <script>
-    function toggleModal(modalId, show) {
-        const modal = document.getElementById(modalId);
-        if (show) { modal.style.display = 'flex'; document.body.style.overflow='hidden'; } 
-        else { modal.style.display = 'none'; document.body.style.overflow='auto'; }
+function toggleModal(modalId, show) {
+    const modal = document.getElementById(modalId);
+    if (show) { modal.style.display = 'flex'; document.body.style.overflow='hidden'; }
+    else { modal.style.display = 'none'; document.body.style.overflow='auto'; }
+}
+window.onclick = function(event) {
+    if(event.target.classList.contains('modal-overlay')) {
+        event.target.style.display='none';
+        document.body.style.overflow='auto';
     }
-    window.onclick = function(event) {
-        if(event.target.classList.contains('modal-overlay')) {
-            event.target.style.display='none';
-            document.body.style.overflow='auto';
-        }
-    }
+}
 </script>
 
 </body>

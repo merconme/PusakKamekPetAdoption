@@ -1,0 +1,62 @@
+:root{
+  --brand:#7a0019;
+  --shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+.admin-nav{
+  height:78px;
+  background:#fff;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 6%;
+  box-shadow:var(--shadow);
+}
+
+.admin-brand{
+  line-height:1.1;
+}
+.admin-title{
+  font-weight:900;
+  color:var(--brand);
+}
+.admin-sub{
+  font-size:10px;
+  color:#888;
+  font-weight:700;
+}
+
+.admin-links{
+  display:flex;
+  gap:10px;
+}
+.admin-links a{
+  text-decoration:none;
+  font-weight:700;
+  color:#333;
+  padding:10px 16px;
+  border-radius:999px;
+}
+.admin-links a.active{
+  background:var(--brand);
+  color:white;
+}
+.admin-links a.logout{
+  color:#b00020;
+}
+
+.admin-user{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  font-weight:700;
+}
+.admin-user-icon{
+  background:#eee;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}

@@ -1,6 +1,8 @@
 package com.pusakkamek.dao;
 
 import com.pusakkamek.model.Pet;
+import com.pusakkamek.util.DBConnection;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,91 +11,124 @@ public class PetDAO {
 
     private Connection conn;
 
+    // ✅ constructor throws SQLException
     public PetDAO() throws SQLException {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            // Update with your DB credentials
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/pusak_kamek?useSSL=false&serverTimezone=UTC",
-                    "root",
-                    ""); 
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            throw new SQLException(e);
-        }
+        conn = DBConnection.getConnection();
     }
 
-    // Get all pets
+    // ================= PET BROWSE =================
+
     public List<Pet> getAllPets() throws SQLException {
-        List<Pet> list = new ArrayList<>();
-        String sql = "SELECT * FROM pets";
-        try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        List<Pet> pets = new ArrayList<>();
+
+        String sql = "SELECT * FROM pets WHERE status='AVAILABLE' ORDER BY created_at DESC";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                Pet pet = new Pet(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("species"),
-                        rs.getString("breed"),
-                        rs.getInt("age"),
-                        rs.getString("vaccination_status"),
-                        rs.getString("condition"),
-                        rs.getString("neutered"),
-                        rs.getString("color"),
-                        rs.getString("image_url")
-                );
-                list.add(pet);
+                pets.add(mapPet(rs));
             }
         }
-        return list;
+        return pets;
     }
 
-    // Search pets by name, species, or breed
     public List<Pet> searchPets(String keyword) throws SQLException {
-        List<Pet> list = new ArrayList<>();
-        String sql = "SELECT * FROM pets WHERE name LIKE ? OR species LIKE ? OR breed LIKE ?";
+        List<Pet> pets = new ArrayList<>();
+
+        String sql = "SELECT * FROM pets WHERE status='AVAILABLE' " +
+                     "AND (LOWER(name) LIKE ? OR LOWER(species) LIKE ? OR LOWER(breed) LIKE ?) " +
+                     "ORDER BY created_at DESC";
+
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            String q = "%" + keyword + "%";
-            ps.setString(1, q);
-            ps.setString(2, q);
-            ps.setString(3, q);
+            String k = "%" + keyword.toLowerCase() + "%";
+            ps.setString(1, k);
+            ps.setString(2, k);
+            ps.setString(3, k);
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    Pet pet = new Pet(
-                            rs.getInt("id"),
-                            rs.getString("name"),
-                            rs.getString("species"),
-                            rs.getString("breed"),
-                            rs.getInt("age"),
-                            rs.getString("vaccination_status"),
-                            rs.getString("condition"),
-                            rs.getString("neutered"),
-                            rs.getString("color"),
-                            rs.getString("image_url")
-                    );
-                    list.add(pet);
+                    pets.add(mapPet(rs));
                 }
             }
         }
-        return list;
+        return pets;
     }
-
-    // Insert new pet
-    public void insertPet(Pet pet) throws SQLException {
-        String sql = "INSERT INTO pets (name, species, breed, age, vaccination_status, `condition`, neutered, color, image_url) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, pet.getName());
-            ps.setString(2, pet.getSpecies());
-            ps.setString(3, pet.getBreed());
-            ps.setInt(4, pet.getAge());
-            ps.setString(5, pet.getVaccinationStatus());
-            ps.setString(6, pet.getCondition());
-            ps.setString(7, pet.getNeutered());
-            ps.setString(8, pet.getColor());
-            ps.setString(9, pet.getImageUrl());
-            ps.executeUpdate();
+    
+    public Pet getPetById(int id) throws SQLException {
+    String sql = "SELECT * FROM pets WHERE id=?";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, id);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return mapPet(rs);
+            }
         }
     }
+    return null;
+}
+
+
+    // ================= ADMIN COUNTS =================
+
+    public int countAvailablePets() throws SQLException {
+        return count("SELECT COUNT(*) FROM pets WHERE status='AVAILABLE'");
+    }
+
+    public int countAdoptedPets() throws SQLException {
+        return count("SELECT COUNT(*) FROM pets WHERE status='ADOPTED'");
+    }
+
+    public int countPendingApplications() throws SQLException {
+        return count("SELECT COUNT(*) FROM adoption_applications WHERE status='PENDING'");
+    }
+
+    // ================= HELPERS =================
+
+    private int count(String sql) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            return rs.next() ? rs.getInt(1) : 0;
+        }
+    }
+
+    private Pet mapPet(ResultSet rs) throws SQLException {
+        Pet pet = new Pet();
+        pet.setId(rs.getInt("id"));
+        pet.setSpecies(rs.getString("species"));
+        pet.setName(rs.getString("name"));
+        pet.setBreed(rs.getString("breed"));
+        pet.setAge(rs.getInt("age"));
+        pet.setVaccinationStatus(rs.getString("vaccination_status"));
+        pet.setCondition(rs.getString("pet_condition"));
+        pet.setNeutered(rs.getString("neutered"));
+        pet.setColor(rs.getString("color"));
+        pet.setImageUrl(rs.getString("image_url"));
+        pet.setStatus(rs.getString("status"));
+        return pet;
+    }
+    // ================= ADD PET (INSERT) =================
+public boolean insertPet(Pet pet) throws SQLException {
+
+    String sql = "INSERT INTO pets " +
+            "(species, name, breed, age, vaccination_status, pet_condition, neutered, color, image_url, status) " +
+            "VALUES (?,?,?,?,?,?,?,?,?,?)";
+
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, pet.getSpecies());
+        ps.setString(2, pet.getName());
+        ps.setString(3, pet.getBreed());
+        ps.setInt(4, pet.getAge());
+        ps.setString(5, pet.getVaccinationStatus());
+        ps.setString(6, pet.getCondition());
+        ps.setString(7, pet.getNeutered());
+        ps.setString(8, pet.getColor());
+        ps.setString(9, pet.getImageUrl());
+        ps.setString(10, pet.getStatus());
+
+        return ps.executeUpdate() > 0;
+    }
+}
+
 }

@@ -2,9 +2,12 @@ package com.pusakkamek.controller;
 
 import com.pusakkamek.dao.AdminDAO;
 import com.pusakkamek.model.Admin;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet("/adminLogin")
@@ -27,15 +30,14 @@ public class AdminLoginServlet extends HttpServlet {
         Admin admin = dao.login(username, password);
 
         if (admin != null) {
-            HttpSession session = request.getSession();
+            HttpSession session = request.getSession(true);
             session.setAttribute("adminUser", admin);
 
-            // ✅ CORRECT REDIRECT
-            response.sendRedirect(request.getContextPath() + "admin-index.jsp");
-
+            // ✅ redirect to servlet (recommended)
+            response.sendRedirect(request.getContextPath() + "/admin/index");
         } else {
             request.setAttribute("error", "Invalid admin credentials");
-            request.getRequestDispatcher("admin-login.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin-login.jsp").forward(request, response);
         }
     }
 }
