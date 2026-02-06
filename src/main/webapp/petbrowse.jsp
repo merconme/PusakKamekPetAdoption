@@ -32,203 +32,221 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Browse Pets - Pusak Kamek</title>
-
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 
     <style>
         :root{
             --brand:#7a0019;
-            --brandLight:#96102b;
-            --bg:#f7f7f7;
+            --brand2:#96102b;
+            --bg:#f6f7fb;
             --card:#ffffff;
-            --shadow:0 10px 30px rgba(0,0,0,0.12);
-            --soft:rgba(255,255,255,0.18);
+            --text:#111827;
+            --muted:#6b7280;
+            --line:#e5e7eb;
+            --shadow:0 12px 35px rgba(0,0,0,.10);
         }
 
+        *{ box-sizing:border-box; }
         body{
             margin:0;
-            font-family:'Poppins','Segoe UI',sans-serif;
-            background:var(--bg);
+            font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+            background:
+                radial-gradient(900px 520px at 18% 10%, rgba(122,0,25,.08), transparent 60%),
+                radial-gradient(900px 520px at 85% 15%, rgba(150,16,43,.06), transparent 55%),
+                linear-gradient(180deg, #fafafa, var(--bg));
+            color:var(--text);
         }
 
-        /* ===== NAVBAR ===== */
-        .navbar{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            padding:14px 6%;
-            background:linear-gradient(135deg,var(--brandLight),var(--brand));
-            color:#fff;
-            box-shadow:var(--shadow);
+        /* ===== NAVBAR (SAME LAYOUT AS INDEX) ===== */
+        header.navbar{
             position:sticky;
             top:0;
             z-index:1000;
+            background:linear-gradient(135deg, var(--brand2), var(--brand));
+            box-shadow:0 10px 28px rgba(0,0,0,.18);
+            color:#fff;
         }
-
-        .logo-text{
-            font-weight:800;
-            font-size:16px;
-            line-height:1.05;
-            letter-spacing:.3px;
-        }
-        .logo-text small{
-            display:block;
-            font-weight:500;
-            font-size:11px;
-            opacity:.9;
-            margin-top:3px;
-        }
-
-        .nav-links{
-            list-style:none;
-            display:flex;
-            gap:14px;
-            margin:0;
-            padding:0;
-            align-items:center;
-        }
-        .nav-links a{
-            color:white;
-            text-decoration:none;
-            font-weight:600;
-            font-size:13px;
-            padding:8px 14px;
-            border-radius:999px;
-            transition:.25s;
-            white-space:nowrap;
-        }
-        .nav-links a:hover{ background:var(--soft); }
-        .nav-link-active{ background:rgba(255,255,255,0.26); }
-
-        .right-area{
+        .nav-wrap{
+            max-width:1200px;
+            margin:0 auto;
+            padding:12px 18px;
             display:flex;
             align-items:center;
-            gap:10px;
+            justify-content:space-between;
+            gap:16px;
+        }
+        .brandBox{
+            display:flex; align-items:center; gap:12px;
+            min-width:230px;
+        }
+        .logo{
+            width:42px;height:42px;border-radius:16px;
+            background:linear-gradient(135deg,#fff,#f4d6dc);
+            box-shadow:0 10px 24px rgba(0,0,0,.25);
+            position:relative; overflow:hidden;
+        }
+        .logo:after{
+            content:""; position:absolute;
+            width:18px;height:18px;border-radius:50%;
+            background:rgba(255,255,255,.55);
+            top:-6px; right:-6px;
+        }
+        .brand-txt b{
+            display:block; font-size:14px; letter-spacing:.5px; color:#fff;
+        }
+        .brand-txt small{
+            display:block; font-size:11px; font-weight:700;
+            margin-top:3px; color:rgba(255,255,255,.85);
         }
 
-        /* Profile dropdown */
-        .profile-wrapper{ position:relative; }
+        nav.links{ display:flex; gap:10px; flex:1; justify-content:center; }
+        nav.links a{
+            padding:10px 14px;
+            font-size:12px; font-weight:900;
+            color:#fff; text-decoration:none;
+            border-radius:999px; transition:.15s;
+        }
+        nav.links a:hover{ background:rgba(255,255,255,.18); }
+        nav.links a.active{ background:rgba(255,255,255,.30); }
+
+        .right{
+            display:flex; gap:10px; align-items:center; justify-content:flex-end;
+            min-width:230px;
+        }
+
+        .profile{ position:relative; }
         .profile-btn{
-            display:flex;
-            align-items:center;
-            gap:10px;
-            cursor:pointer;
-            padding:6px 10px;
+            display:flex; align-items:center; gap:10px;
+            border:1px solid rgba(255,255,255,.45);
+            background:rgba(255,255,255,.10);
+            padding:7px 10px;
             border-radius:999px;
-            transition:.25s;
-            user-select:none;
+            cursor:pointer; color:#fff;
         }
-        .profile-btn:hover{ background:var(--soft); }
-        .profile-name{ font-weight:700; font-size:12.5px; white-space:nowrap; }
-
-        .profile-icon{
-            width:34px;
-            height:34px;
-            border-radius:50%;
-            background:rgba(255,255,255,0.22);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:16px;
+        .avatar{
+            width:34px;height:34px;border-radius:50%;
+            display:flex;align-items:center;justify-content:center;
+            background:rgba(255,255,255,.25);
         }
-
-        .profile-menu{
-            position:absolute;
-            right:0;
-            top:48px;
-            background:#fff;
-            width:190px;
-            border-radius:14px;
-            box-shadow:var(--shadow);
-            overflow:hidden;
-            display:none;
+        .name{
+            font-weight:900; font-size:12px;
+            max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+            color:#fff;
         }
-        .profile-menu a{
-            display:block;
-            padding:12px 14px;
-            text-decoration:none;
-            color:#555;
-            font-weight:700;
-            font-size:13px;
+        .menu{
+            position:absolute; right:0; top:52px;
+            width:210px; background:#fff;
+            border:1px solid var(--line);
+            border-radius:16px; box-shadow:var(--shadow);
+            overflow:hidden; display:none;
         }
-        .profile-menu a:hover{ background:#f5f5f5; }
-        .profile-menu .logout{ color:#b00020; }
+        .menu a{
+            display:block; padding:12px 14px;
+            text-decoration:none; font-weight:900; font-size:13px;
+            color:#444;
+        }
+        .menu a:hover{ background:#f5f5f5; }
+        .menu a.logout{ color:#b00020; }
 
         /* ===== PAGE ===== */
-        .page-wrapper{
-            padding:28px 6% 55px;
+        .container{
+            max-width:1200px;
+            margin:0 auto;
+            padding:22px 18px 70px;
         }
 
-        .page-title{
+        .topbar{
             display:flex;
             justify-content:space-between;
             align-items:flex-end;
-            gap:15px;
-            margin:10px 0 18px;
+            gap:14px;
+            margin:8px 0 18px;
         }
-        .page-title h1{
+
+        .title h1{
             margin:0;
-            color:#222;
-            font-size:28px;
-            font-weight:800;
+            font-size:30px;
+            font-weight:900;
+            letter-spacing:.2px;
         }
-        .page-title p{
+        .title p{
             margin:6px 0 0;
-            color:#666;
+            color:var(--muted);
+            font-weight:700;
             font-size:13px;
         }
 
-        /* Search */
-        .search-container{
+        /* Search bar */
+        .searchWrap{
+            margin-top:14px;
+            background:#fff;
+            border:1px solid rgba(229,231,235,.9);
+            border-radius:18px;
+            box-shadow:0 10px 25px rgba(0,0,0,.06);
+            padding:14px;
             display:flex;
-            justify-content:center;
-            margin:22px 0 30px;
-        }
-        .search-box{
-            width:100%;
-            max-width:560px;
-            display:flex;
-            gap:10px;
+            gap:12px;
             align-items:center;
-            background:white;
-            padding:10px 12px;
-            border-radius:45px;
-            box-shadow:var(--shadow);
         }
-        .search-box input{
+        .searchWrap .icon{
+            width:42px;height:42px;border-radius:14px;
+            display:flex;align-items:center;justify-content:center;
+            background:rgba(122,0,25,.08);
+            font-size:18px;
+        }
+        .searchWrap input{
             width:100%;
             border:none;
             outline:none;
             font-size:14px;
-            padding:10px 10px;
+            font-weight:700;
         }
-        .search-box button{
+        .searchWrap button{
             border:none;
             cursor:pointer;
-            background:var(--brand);
-            color:white;
-            font-weight:800;
-            padding:10px 16px;
-            border-radius:35px;
-            transition:.25s;
+            background:linear-gradient(135deg,var(--brand2),var(--brand));
+            color:#fff;
+            font-weight:900;
+            padding:12px 18px;
+            border-radius:999px;
+            transition:.2s;
+            box-shadow:0 12px 26px rgba(122,0,25,.18);
+            white-space:nowrap;
         }
-        .search-box button:hover{ background:var(--brandLight); }
+        .searchWrap button:hover{ transform:translateY(-1px); }
+        .clearLink{
+            text-decoration:none;
+            font-weight:900;
+            font-size:12px;
+            color:var(--brand);
+            padding:10px 12px;
+            border-radius:999px;
+            border:1px solid rgba(122,0,25,.20);
+            background:#fff;
+            white-space:nowrap;
+        }
+        .clearLink:hover{ background:#fff0f2; }
 
-        /* Grid */
+        /* Pets grid */
         .pet-grid{
             display:grid;
             grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
-            gap:28px;
+            gap:18px;
+            margin-top:18px;
         }
-
         .pet-card{
             background:var(--card);
-            border-radius:24px;
+            border-radius:22px;
             overflow:hidden;
-            box-shadow:var(--shadow);
-            transition:.25s;
+            border:1px solid rgba(229,231,235,.9);
+            box-shadow:0 10px 25px rgba(0,0,0,.06);
+            transition:.18s;
+            text-decoration:none;
+            color:inherit;
+            display:flex;
+            flex-direction:column;
         }
-        .pet-card:hover{ transform:translateY(-6px); }
+        .pet-card:hover{ transform:translateY(-5px); box-shadow:0 16px 35px rgba(0,0,0,.10); }
 
         .pet-card img{
             width:100%;
@@ -237,131 +255,168 @@
             background:#eee;
             display:block;
         }
-
-        .pet-card-content{
-            padding:18px;
-        }
-
-        .pet-card h3{
-            margin:0 0 10px;
-            color:var(--brand);
+        .pet-body{ padding:16px; display:flex; flex-direction:column; gap:10px; }
+        .pet-name{
+            margin:0;
             font-size:18px;
-            font-weight:800;
+            font-weight:900;
+            color:var(--brand);
             text-transform:capitalize;
         }
-
-        .pet-meta{
-            font-size:13px;
-            color:#555;
-            margin-bottom:6px;
-        }
-
-        .pet-tag{
-            display:inline-block;
-            padding:5px 12px;
+        .tags{ display:flex; flex-wrap:wrap; gap:8px; }
+        .tag{
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            padding:6px 10px;
             border-radius:999px;
             font-size:11px;
-            font-weight:800;
-            background:#f2f2f2;
-            margin-right:6px;
-            margin-bottom:6px;
+            font-weight:900;
+            background:#f3f4f6;
+            color:#111;
         }
+        .meta{
+            font-size:13px;
+            color:#555;
+            font-weight:700;
+            line-height:1.6;
+        }
+        .viewBtn{
+            margin-top:auto;
+            display:inline-flex;
+            justify-content:center;
+            align-items:center;
+            gap:8px;
+            padding:11px 14px;
+            border-radius:14px;
+            font-weight:900;
+            font-size:12px;
+            border:1px solid rgba(122,0,25,.22);
+            color:var(--brand);
+            background:#fff;
+            text-decoration:none;
+            transition:.15s;
+        }
+        .pet-card:hover .viewBtn{ background:#fff0f2; }
 
         .empty{
-            background:white;
-            border-radius:20px;
-            padding:24px;
-            box-shadow:var(--shadow);
+            margin-top:18px;
+            background:#fff;
+            border-radius:18px;
+            padding:18px;
+            border:1px solid rgba(229,231,235,.9);
+            box-shadow:0 10px 25px rgba(0,0,0,.06);
             color:#555;
+            font-weight:700;
         }
         .empty b{ color:var(--brand); }
+
+        @media (max-width: 1000px){
+            nav.links{ display:none; }
+            .topbar{ flex-direction:column; align-items:flex-start; }
+        }
     </style>
 </head>
 
 <body>
 
 <header class="navbar">
-    <div class="logo-text">
-        PUSAK KAMEK
-        <small>Rescue · Rehome · Rebuild</small>
-    </div>
-
-    <nav>
-        <ul class="nav-links">
-         <li><a href="<%= cp %>/index.jsp">Home</a></li>
-            <li><a href="<%= cp %>/stories.jsp">Stories</a></li>
-            <li><a href="<%= cp %>/petbrowse.jsp">Pet</a></li>
-            <li><a href="<%= cp %>/adopt.jsp" class="nav-link-active">Adopt</a></li>
-            <li><a href="<%= cp %>/volunteer.jsp">Volunteer</a></li>
-            <li><a href="<%= cp %>/my-adoptions">My Adoptions</a></li>
-        </ul>
-    </nav>
-
-    <div class="right-area">
-        <div class="profile-wrapper">
-            <div class="profile-btn" onclick="toggleProfileMenu()">
-                <span class="profile-name">Hello, <%= currentUser.getName() %></span>
-                <div class="profile-icon">👤</div>
+    <div class="nav-wrap">
+        <div class="brandBox">
+            <div class="logo"></div>
+            <div class="brand-txt">
+                <b>PUSAK KAMEK</b>
+                <small>Rescue · Rehome · Rebuild</small>
             </div>
+        </div>
 
-            <div class="profile-menu" id="profileMenu">
-                <a href="<%= cp %>/profile.jsp">Update Profile</a>
-                <a href="<%= cp %>/LogoutServlet" class="logout">Logout</a>
+        <nav class="links">
+            <a href="<%= cp %>/index.jsp">Home</a>
+            <a href="<%= cp %>/stories">Stories</a>
+            <a class="active" href="<%= cp %>/petbrowse.jsp">Pet</a>
+            <a href="<%= cp %>/adopt.jsp">Adopt</a>
+            <a href="<%= cp %>/volunteer.jsp">Volunteer</a>
+            <a href="<%= cp %>/donation.jsp">Donation</a>
+            <a href="<%= cp %>/my-adoptions">My Adoptions</a>
+        </nav>
+
+        <div class="right">
+            <div class="profile">
+                <div class="profile-btn" onclick="toggleProfileMenu()">
+                    <div class="avatar">👤</div>
+                    <div class="name">Hello, <%= currentUser.getName() %></div>
+                </div>
+                <div class="menu" id="profileMenu">
+                    <a href="<%= cp %>/profile.jsp">Update Profile</a>
+                    <a class="logout" href="<%= cp %>/LogoutServlet">Logout</a>
+                </div>
             </div>
         </div>
     </div>
 </header>
 
-<main class="page-wrapper">
+<main class="container">
 
-    <div class="page-title">
-        <div>
+    <div class="topbar">
+        <div class="title">
             <h1>Browse Pets</h1>
             <p>Search and view adoptable pets available right now.</p>
         </div>
-        <div style="color:#666;font-size:13px;">
-            Logged in as <b><%= currentUser.getName() %></b>
-        </div>
     </div>
 
-    <!-- ✅ Search -->
-    <form class="search-container" method="get" action="<%= cp %>/petbrowse.jsp">
-        <div class="search-box">
-            <input type="text" name="search"
-                   placeholder="Search by name, species or breed..."
-                   value="<%= (query != null) ? query : "" %>">
-            <button type="submit">Search</button>
-        </div>
+    <!-- Search -->
+    <form method="get" action="<%= cp %>/petbrowse.jsp" class="searchWrap">
+        <div class="icon">🔎</div>
+
+        <input type="text" name="search"
+               placeholder="Search by name, species or breed..."
+               value="<%= (query != null) ? query : "" %>">
+
+        <% if (query != null && !query.trim().isEmpty()) { %>
+            <a class="clearLink" href="<%= cp %>/petbrowse.jsp">Clear</a>
+        <% } %>
+
+        <button type="submit">Search</button>
     </form>
 
-    <!-- ✅ Pets -->
+    <!-- Pets -->
     <% if (pets == null || pets.isEmpty()) { %>
         <div class="empty">
-            No pets found for <b><%= (query != null && !query.isEmpty()) ? query : "your search" %></b>.
+            No pets found for <b><%= (query != null && !query.trim().isEmpty()) ? query : "your search" %></b>.
             Try another keyword.
         </div>
     <% } else { %>
         <div class="pet-grid">
-            <% for (Pet pet : pets) { %>
-            <a href="<%= cp %>/pet?id=<%= pet.getId() %>" style="text-decoration:none; color:inherit;">
+            <% for (Pet pet : pets) {
 
-                <div class="pet-card">
-                    <!-- ✅ FIXED: use your ImageServlet mapping /images/* -->
-                    <img src="<%= cp %>/images/<%= URLEncoder.encode(pet.getImageUrl(), "UTF-8") %>"
-                         alt="<%= pet.getName() %>">
+                String safeImg = (pet.getImageUrl() == null) ? "" : pet.getImageUrl().trim();
+                if (safeImg.isEmpty()) safeImg = "no-image.png";
+            %>
 
-                    <div class="pet-card-content">
-                        <h3><%= pet.getName() %></h3>
+            <a class="pet-card" href="<%= cp %>/pet?id=<%= pet.getId() %>">
 
-                        <div class="pet-meta">
-                            <span class="pet-tag"><%= pet.getSpecies() %></span>
-                            <span class="pet-tag"><%= pet.getAge() %> years</span>
-                        </div>
+                <img src="<%= cp %>/images/<%= URLEncoder.encode(safeImg, "UTF-8") %>"
+                     alt="<%= pet.getName() %>"
+                     onerror="this.onerror=null;this.src='<%= cp %>/images/no-image.png';">
 
-                        <div class="pet-meta">Breed: <%= (pet.getBreed() != null && !pet.getBreed().isEmpty()) ? pet.getBreed() : "-" %></div>
-                        <div class="pet-meta">Vaccinated: <%= (pet.getVaccinationStatus() != null && !pet.getVaccinationStatus().isEmpty()) ? pet.getVaccinationStatus() : "-" %></div>
+                <div class="pet-body">
+                    <h3 class="pet-name"><%= pet.getName() %></h3>
+
+                    <div class="tags">
+                        <span class="tag">🐾 <%= pet.getSpecies() %></span>
+                        <span class="tag">🎂 <%= pet.getAge() %> years</span>
+                        <% if (pet.getVaccinationStatus() != null && !pet.getVaccinationStatus().trim().isEmpty()) { %>
+                            <span class="tag">💉 <%= pet.getVaccinationStatus() %></span>
+                        <% } %>
                     </div>
-                </div>                  
+
+                    <div class="meta">
+                        Breed: <%= (pet.getBreed() != null && !pet.getBreed().trim().isEmpty()) ? pet.getBreed() : "-" %>
+                    </div>
+
+                    <span class="viewBtn">View Details →</span>
+                </div>
+
             </a>
             <% } %>
         </div>
@@ -376,7 +431,7 @@ function toggleProfileMenu(){
     menu.style.display = (menu.style.display === "block") ? "none" : "block";
 }
 window.onclick = function(e){
-    if(!e.target.closest(".profile-wrapper")){
+    if(!e.target.closest(".profile")){
         const menu = document.getElementById("profileMenu");
         if(menu) menu.style.display = "none";
     }

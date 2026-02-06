@@ -1,252 +1,300 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="com.pusakkamek.model.User" %>
+<%
+    String cp = request.getContextPath();
+
+    User currentUser = (User) session.getAttribute("currentUser");
+    if (currentUser == null) {
+        response.sendRedirect(cp + "/login.jsp");
+        return;
+    }
+
+    String success = (String) session.getAttribute("profileSuccess");
+    String error = (String) session.getAttribute("profileError");
+    if (success != null) session.removeAttribute("profileSuccess");
+    if (error != null) session.removeAttribute("profileError");
+%>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pusak Kamek - My Profile</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Pusak Kamek - Update Profile</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 
     <style>
-        :root {
-            --primary-maroon: #7a0019;
+        :root{
+            --brand:#7a0019;
+            --brand2:#96102b;
+            --bg:#f6f7fb;
+            --text:#111827;
+            --line:#e5e7eb;
+            --shadow:0 12px 35px rgba(0,0,0,.10);
+        }
+        *{ box-sizing:border-box; }
+        body{
+            margin:0;
+            font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+            background:var(--bg);
+            color:var(--text);
         }
 
-        body {
-            background-color: var(--primary-maroon);
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /* NAVBAR SAME STYLE */
+        header.navbar{
+            position:sticky; top:0; z-index:1000;
+            background:linear-gradient(135deg, var(--brand2), var(--brand));
+            box-shadow:0 10px 28px rgba(0,0,0,.18);
+            color:#fff;
         }
-
-        /* --- Navbar --- */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 5%;
-            background-color: #7a0019;
-            color: white;
+        .nav-wrap{
+            max-width:1200px;
+            margin:0 auto;
+            padding:12px 18px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:16px;
         }
-
-        .logo-text { font-weight: bold; line-height: 1.2; }
-        .logo-text small { font-weight: normal; font-size: 12px; }
-
-        .navbar nav ul {
-            display: flex;
-            list-style: none;
-            gap: 30px;
-            margin: 0;
-            padding: 0;
+        .brand{
+            display:flex; align-items:center; gap:12px;
+            min-width:230px;
         }
-
-        .navbar nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 20px;
+        .logo{
+            width:42px;height:42px;border-radius:16px;
+            background:linear-gradient(135deg,#fff,#f4d6dc);
+            box-shadow:0 10px 24px rgba(0,0,0,.25);
+            position:relative; overflow:hidden;
         }
-
-        .user-profile-icon a {
-            font-size: 24px;
-            color: white;
-            text-decoration: none;
+        .logo:after{
+            content:""; position:absolute; width:18px;height:18px;border-radius:50%;
+            background:rgba(255,255,255,.55); top:-6px; right:-6px;
         }
+        .brand-txt b{ display:block; font-size:14px; letter-spacing:.5px; color:#fff; }
+        .brand-txt small{ display:block; font-size:11px; font-weight:700; margin-top:3px; color:rgba(255,255,255,.85); }
 
-        /* --- Profile Container --- */
-        .profile-wrapper {
-            background-color: white;
-            margin: 20px auto;
-            width: 95%;
-            max-width: 1100px;
-            border-radius: 50px;
-            padding: 40px;
-            min-height: 80vh;
-            position: relative;
+        nav.links{ display:flex; gap:10px; flex:1; justify-content:center; }
+        nav.links a{
+            padding:10px 14px;
+            font-size:12px; font-weight:900;
+            color:#fff; text-decoration:none;
+            border-radius:999px; transition:.15s;
         }
+        nav.links a:hover{ background:rgba(255,255,255,.18); }
+        nav.links a.active{ background:rgba(255,255,255,.30); }
 
-        .top-nav-arrow {
-            position: absolute;
-            right: 40px;
-            top: 40px;
-            font-size: 20px;
-            color: #333;
-            border: 1px solid #ddd;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            text-decoration: none;
+        .right{ display:flex; gap:10px; align-items:center; justify-content:flex-end; min-width:230px; }
+        .profile{ position:relative; }
+        .profile-btn{
+            display:flex; align-items:center; gap:10px;
+            border:1px solid rgba(255,255,255,.45);
+            background:rgba(255,255,255,.10);
+            padding:7px 10px; border-radius:999px;
+            cursor:pointer; color:#fff;
         }
+        .avatar{
+            width:34px;height:34px;border-radius:50%;
+            display:flex;align-items:center;justify-content:center;
+            background:rgba(255,255,255,.25);
+        }
+        .name{
+            font-weight:900; font-size:12px;
+            max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+            color:#fff;
+        }
+        .menu{
+            position:absolute; right:0; top:52px;
+            width:210px; background:#fff;
+            border:1px solid var(--line);
+            border-radius:16px; box-shadow:0 12px 30px rgba(0,0,0,.25);
+            overflow:hidden; display:none;
+        }
+        .menu a{
+            display:block; padding:12px 14px;
+            text-decoration:none; font-weight:900; font-size:13px;
+            color:#444;
+        }
+        .menu a:hover{ background:#f5f5f5; }
+        .menu a.logout{ color:#b00020; }
+        @media (max-width: 1000px){ nav.links{ display:none; } }
 
-        .user-info-card {
-            display: flex;
-            align-items: center;
-            gap: 40px;
-            padding: 30px;
-            border-radius: 30px;
-            border: 1px solid #eee;
-            margin: 30px 0 50px;
+        /* TOAST */
+        .toast{
+            max-width:1200px;
+            margin:14px auto 0;
+            padding:14px 16px;
+            border-radius:16px;
+            font-weight:900;
+            font-size:13px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            box-shadow:0 12px 28px rgba(0,0,0,.10);
+            border:1px solid transparent;
         }
+        .toast button{
+            border:none;background:transparent;cursor:pointer;
+            font-weight:900;font-size:14px;opacity:.8;
+        }
+        .toast button:hover{ opacity:1; }
+        .toast-success{ background:linear-gradient(135deg,#e8f7ee,#f4fbf7); color:#0b5f16; border-color:rgba(11,95,22,.15); }
+        .toast-error{ background:linear-gradient(135deg,#fde7e7,#fff3f3); color:#8b0000; border-color:rgba(139,0,0,.15); }
 
-        .profile-pic-container img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
+        /* PAGE */
+        .container{
+            max-width:1200px;
+            margin:0 auto;
+            padding:24px 18px 70px;
         }
+        .head{ text-align:center; margin:10px 0 18px; }
+        .head h1{ margin:0 0 6px; font-size:28px; }
+        .head p{ margin:0; color:#666; font-weight:700; font-size:13px; }
 
-        .edit-btn {
-            background-color: var(--primary-maroon);
-            color: white;
-            padding: 10px 25px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
+        .card{
+            max-width:700px;
+            margin:0 auto;
+            background:#fff;
+            border:1px solid rgba(229,231,235,.85);
+            border-radius:22px;
+            box-shadow:0 10px 25px rgba(0,0,0,.06);
+            padding:18px;
         }
-
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 20px;
-            margin: 40px 0 20px;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 10px;
+        label{ display:block; font-weight:900; font-size:12px; color:#333; margin:12px 0 6px; }
+        input{
+            width:100%;
+            padding:12px 12px;
+            border-radius:14px;
+            border:1px solid #e5e7eb;
+            outline:none;
+            font-family:inherit;
+            font-size:13px;
         }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
+        .btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            padding:12px 18px;
+            border-radius:999px;
+            font-weight:900;
+            font-size:13px;
+            border:none;
+            cursor:pointer;
+            width:100%;
+            margin-top:14px;
+            background:linear-gradient(135deg,var(--brand2),var(--brand));
+            color:#fff;
+            box-shadow:0 12px 26px rgba(122,0,25,.18);
         }
-
-        .pet-card {
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 20px;
-            text-align: center;
-        }
-
-        .pet-card img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 10px;
-        }
-
-        .checkin-btn {
-            display: inline-block;
-            margin-top: 10px;
-            background-color: var(--primary-maroon);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        @media (max-width: 768px) {
-            .user-info-card { flex-direction: column; text-align: center; }
-            .navbar nav { display: none; }
-        }
+        .hint{ margin-top:10px; color:#666; font-weight:700; font-size:12px; line-height:1.6; }
+        .two{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+        @media(max-width:700px){ .two{ grid-template-columns:1fr; } }
     </style>
 </head>
 
 <body>
 
 <header class="navbar">
-    <div class="logo-text">
-        PUSAK KAMEK<br><small>Rescue - Rehome - Rebuild</small>
-    </div>
+    <div class="nav-wrap">
+        <div class="brand">
+            <div class="logo"></div>
+            <div class="brand-txt">
+                <b>PUSAK KAMEK</b>
+                <small>Rescue · Rehome · Rebuild</small>
+            </div>
+        </div>
 
-    <nav>
-        <ul>
-            <li><a href="index.jsp">Home</a></li>
-            <li><a href="stories.jsp">Stories</a></li>
-            <li><a href="pet-browse.jsp">Pet</a></li>
-            <li><a href="adopt-history.jsp">Adopt</a></li>
-            <li><a href="foster.jsp">Foster</a></li>
-            <li><a href="donation.jsp">Donate</a></li>
-            <li><a href="volunteer.jsp">Volunteer</a></li>
-        </ul>
-    </nav>
+        <nav class="links">
+            <a href="<%= cp %>/index.jsp">Home</a>
+            <a href="<%= cp %>/stories.jsp">Stories</a>
+            <a href="<%= cp %>/petbrowse.jsp">Pet</a>
+            <a href="<%= cp %>/adopt.jsp">Adopt</a>
+            <a href="<%= cp %>/volunteer.jsp">Volunteer</a>
+            <a href="<%= cp %>/donation.jsp">Donation</a>
+            <a href="<%= cp %>/my-adoptions">My Adoptions</a>
+        </nav>
 
-    <div class="user-profile-icon">
-        <a href="ProfileServlet">👤</a>
+        <div class="right">
+            <div class="profile">
+                <div class="profile-btn" onclick="toggleProfileMenu()">
+                    <div class="avatar">👤</div>
+                    <div class="name">Hello, <%= currentUser.getName() %></div>
+                </div>
+                <div class="menu" id="profileMenu">
+                    <a class="active" href="<%= cp %>/profile.jsp">Update Profile</a>
+                    <a class="logout" href="<%= cp %>/LogoutServlet">Logout</a>
+                </div>
+            </div>
+        </div>
     </div>
 </header>
 
-<main>
-    <div class="profile-wrapper">
+<% if (success != null) { %>
+<div class="toast toast-success" id="toastMsg">
+    <span><%= success %></span>
+    <button type="button" onclick="closeToast()">✕</button>
+</div>
+<% } %>
 
-        <a href="pet-browse.jsp" class="top-nav-arrow">
-            <i class="fa-solid fa-arrow-right"></i>
-        </a>
+<% if (error != null) { %>
+<div class="toast toast-error" id="toastMsg">
+    <span><%= error %></span>
+    <button type="button" onclick="closeToast()">✕</button>
+</div>
+<% } %>
 
-        <h2 style="font-size:32px;">My Profile</h2>
+<main class="container">
+    <div class="head">
+        <h1>Update Profile</h1>
+        <p>Edit your name, email, phone (and password if you want).</p>
+    </div>
 
-        <!-- USER INFO -->
-        <div class="user-info-card">
-            <div class="profile-pic-container">
-                <img src="https://images.unsplash.com/photo-1503777119540-ce54b422baff?q=80&w=200">
+    <div class="card">
+        <form method="post" action="<%= cp %>/update-profile">
+
+            <label>Full Name *</label>
+            <input type="text" name="name" value="<%= currentUser.getName() %>" required>
+
+            <label>Email *</label>
+            <input type="email" name="email" value="<%= currentUser.getEmail() %>" required>
+
+            <label>Phone</label>
+            <input type="text" name="phone" value="<%= currentUser.getPhone() != null ? currentUser.getPhone() : "" %>" placeholder="01x-xxxxxxx">
+
+            <label style="margin-top:16px;">Change Password (optional)</label>
+            <div class="two">
+                <input type="password" name="new_password" placeholder="New password (leave empty if not change)">
+                <input type="password" name="confirm_password" placeholder="Confirm new password">
             </div>
 
-            <div class="user-details">
-                <p><strong>Name:</strong> Ariana Lee</p>
-                <p><strong>Phone:</strong> 012-3456789</p>
-                <p><strong>Email:</strong> arianalee@gmail.com</p>
-                <p><strong>Address:</strong> Kuching, Sarawak</p>
+            <button class="btn" type="submit">Save Changes</button>
+
+            <div class="hint">
+                If you don’t want to change password, leave both password boxes empty.
             </div>
-
-            <div>
-                <a href="edit-profile.jsp" class="edit-btn">Edit Profile</a>
-            </div>
-        </div>
-
-        <!-- ADOPTED PETS -->
-        <div class="section-title">
-            <i class="fa-solid fa-house-chimney-window"></i>
-            <strong>My Adopted Pets</strong>
-        </div>
-
-        <div class="grid-container">
-            <div class="pet-card">
-                <img src="https://images.unsplash.com/photo-1592194996308-7b43878e84a6?q=80&w=200">
-                <h4>Smiski</h4>
-                <p>British Short Hair</p>
-                <a href="pet-checkin.jsp" class="checkin-btn">Pet Check-in</a>
-            </div>
-        </div>
-
-        <!-- FAVOURITES -->
-        <div class="section-title">
-            <i class="fa-solid fa-bookmark"></i>
-            <strong>Saved Favourite Pets</strong>
-        </div>
-
-        <div class="grid-container">
-            <div class="pet-card">
-                <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=200">
-                <h4>Tabby</h4>
-                <p>British Short Hair</p>
-            </div>
-
-            <div class="pet-card">
-                <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=200">
-                <h4>Mochi</h4>
-                <p>White Ragdoll</p>
-            </div>
-        </div>
-
+        </form>
     </div>
 </main>
+
+<script>
+function toggleProfileMenu(){
+    const menu = document.getElementById("profileMenu");
+    if(!menu) return;
+    menu.style.display = (menu.style.display === "block") ? "none" : "block";
+}
+window.onclick = function(e){
+    if(!e.target.closest(".profile")){
+        const menu = document.getElementById("profileMenu");
+        if(menu) menu.style.display = "none";
+    }
+}
+function closeToast(){
+    const t = document.getElementById("toastMsg");
+    if(t) t.style.display = "none";
+}
+setTimeout(closeToast, 3000);
+</script>
 
 </body>
 </html>

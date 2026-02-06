@@ -60,7 +60,17 @@ public class AdoptionDAO {
         return list;
     }
 
-    // ✅ ADMIN LIST (Admin see all applications)
+    // ✅ FIXED: Successful adoptions count
+    public int countSuccessfulAdoptions() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM adoption_applications WHERE status='APPROVED'";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            return rs.next() ? rs.getInt(1) : 0;
+        }
+    }
+
+    // ✅ ADMIN LIST
     public List<AdoptionApplication> getAllForAdmin() throws SQLException {
 
         List<AdoptionApplication> list = new ArrayList<>();

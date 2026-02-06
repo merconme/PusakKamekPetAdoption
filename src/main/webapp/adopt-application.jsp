@@ -154,6 +154,7 @@
             <li><a href="<%= cp %>/petbrowse.jsp">Pet</a></li>
             <li><a href="<%= cp %>/adopt.jsp" class="nav-link-active">Adopt</a></li>
             <li><a href="<%= cp %>/volunteer.jsp">Volunteer</a></li>
+            <a href="<%= cp %>/donation.jsp">Donation</a>
             <li><a href="<%= cp %>/my-adoptions">My Adoptions</a></li>
         </ul>
     </nav>

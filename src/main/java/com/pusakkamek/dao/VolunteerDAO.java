@@ -1,61 +1,126 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.pusakkamek.dao;
 
-import com.pusakkamek.model.Volunteer;
+import com.pusakkamek.model.VolunteerApplication;
+import com.pusakkamek.util.DBConnection;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class VolunteerDAO {
-    private final String jdbcURL = "jdbc:mysql://localhost:3306/pusak_kamek";
-    private final String jdbcUsername = "root";
-    private final String jdbcPassword = "";
 
-    private static final String INSERT_VOLUNTEER_SQL = 
-        "INSERT INTO volunteers (name, email, age, role, availability) VALUES (?, ?, ?, ?, ?)";
-    private static final String SELECT_ALL_VOLUNTEERS = 
-        "SELECT * FROM volunteers";
-    
-    public VolunteerDAO() {}
+    // ✅ Insert Volunteer Application
+    public boolean insertApplication(VolunteerApplication v) throws SQLException {
 
-    protected Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-    }
+        // ✅ prevent null for NOT NULL column
+        String exp = v.getExperience();
+        if (exp == null || exp.trim().isEmpty()) exp = "NO";
 
-    // Add new volunteer
-    public void addVolunteer(Volunteer volunteer) throws SQLException {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_VOLUNTEER_SQL)) {
-            preparedStatement.setString(1, volunteer.getName());
-            preparedStatement.setString(2, volunteer.getEmail());
-            preparedStatement.setInt(3, volunteer.getAge());
-            preparedStatement.setString(4, volunteer.getRole());
-            preparedStatement.setString(5, volunteer.getAvailability());
-            preparedStatement.executeUpdate();
+        String sql = "INSERT INTO volunteer_applications " +
+                "(user_id, full_name, phone, email, address, role, availability, experience, reason, status) " +
+                "VALUES (?,?,?,?,?,?,?,?,?, 'PENDING')";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, v.getUserId());
+            ps.setString(2, v.getFullName());
+            ps.setString(3, v.getPhone());
+            ps.setString(4, v.getEmail());
+            ps.setString(5, v.getAddress());
+            ps.setString(6, v.getRole());
+            ps.setString(7, v.getAvailability());
+            ps.setString(8, exp);
+            ps.setString(9, v.getReason());
+
+            return ps.executeUpdate() > 0;
         }
     }
 
-    // Get all volunteers
-    public List<Volunteer> getAllVolunteers() throws SQLException {
-        List<Volunteer> volunteers = new ArrayList<>();
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_VOLUNTEERS)) {
-            ResultSet rs = preparedStatement.executeQuery();
-            while (rs.next()) {
-                volunteers.add(new Volunteer(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getString("email"),
-                    rs.getInt("age"),
-                    rs.getString("role"),
-                    rs.getString("availability")
-                ));
+    // ✅ Block duplicate pending application
+    public boolean hasPending(int userId) throws SQLException {
+        String sql = "SELECT 1 FROM volunteer_applications WHERE user_id=? AND status='PENDING' LIMIT 1";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
             }
         }
-        return volunteers;
+    }
+
+    // ✅ Count active volunteers (APPROVED)
+    public int countActiveVolunteers() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM volunteer_applications WHERE status='APPROVED'";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            return rs.next() ? rs.getInt(1) : 0;
+        }
+    }
+
+    // ✅ User history
+    public List<VolunteerApplication> getByUserId(int userId) throws SQLException {
+        List<VolunteerApplication> list = new ArrayList<>();
+        String sql = "SELECT * FROM volunteer_applications WHERE user_id=? ORDER BY created_at DESC";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(map(rs));
+            }
+        }
+        return list;
+    }
+
+    // ✅ Admin list
+    public List<VolunteerApplication> getAllForAdmin() throws SQLException {
+        List<VolunteerApplication> list = new ArrayList<>();
+        String sql = "SELECT * FROM volunteer_applications ORDER BY created_at DESC";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) list.add(map(rs));
+        }
+        return list;
+    }
+
+    // ✅ Admin update status (APPROVED / REJECTED / PENDING)
+    public boolean updateStatus(int id, String status) throws SQLException {
+        String sql = "UPDATE volunteer_applications SET status=? WHERE id=?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, status);
+            ps.setInt(2, id);
+
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    private VolunteerApplication map(ResultSet rs) throws SQLException {
+        VolunteerApplication v = new VolunteerApplication();
+        v.setId(rs.getInt("id"));
+        v.setUserId(rs.getInt("user_id"));
+        v.setFullName(rs.getString("full_name"));
+        v.setPhone(rs.getString("phone"));
+        v.setEmail(rs.getString("email"));
+        v.setAddress(rs.getString("address"));
+        v.setRole(rs.getString("role"));
+        v.setAvailability(rs.getString("availability"));
+        v.setExperience(rs.getString("experience"));
+        v.setReason(rs.getString("reason"));
+        v.setStatus(rs.getString("status"));
+        v.setCreatedAt(rs.getTimestamp("created_at"));
+        return v;
     }
 }
-

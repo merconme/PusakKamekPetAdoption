@@ -1,55 +1,58 @@
 package com.pusakkamek.controller;
 
+import com.pusakkamek.dao.DonationDAO;
 import com.pusakkamek.dao.PetDAO;
 import com.pusakkamek.model.Admin;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
+
 import java.io.IOException;
-import java.sql.SQLException;   // ✅ IMPORTANT
 
 @WebServlet("/admin/index")
 public class AdminIndexServlet extends HttpServlet {
-
-    private PetDAO petDAO;
-
-    @Override
-    public void init() throws ServletException {
-        try {
-            petDAO = new PetDAO(); // ✅ constructor throws SQLException
-        } catch (SQLException e) {
-            throw new ServletException("Failed to initialize PetDAO", e);
-        }
-    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession(false);
-        Admin admin = (session != null) ? (Admin) session.getAttribute("adminUser") : null;
+        String cp = request.getContextPath();
+        HttpSession session = request.getSession();
 
+        // ✅ Admin guard
+        Admin admin = (Admin) session.getAttribute("adminUser");
         if (admin == null) {
-            response.sendRedirect(request.getContextPath() + "/admin-login.jsp");
+            response.sendRedirect(cp + "/admin-login.jsp");
             return;
         }
 
         try {
-            int available = petDAO.countAvailablePets();
-            int adopted = petDAO.countAdoptedPets();
-            int pendingApps = petDAO.countPendingApplications();
+            PetDAO petDAO = new PetDAO();
+            DonationDAO donationDAO = new DonationDAO();
 
-            request.setAttribute("availablePets", available);
-            request.setAttribute("adoptedPets", adopted);
+            int availablePets = petDAO.countAvailablePets();
+            int adoptedPets   = petDAO.countAdoptedPets();
+
+            // ✅ You already have this in PetDAO
+            int pendingApps   = petDAO.countPendingApplications();
+
+            // ✅ Change your DonationDAO method to PAID
+            double donationTotal = donationDAO.getTotalPaidDonations();
+
+            request.setAttribute("availablePets", availablePets);
+            request.setAttribute("adoptedPets", adoptedPets);
             request.setAttribute("pendingApps", pendingApps);
+            request.setAttribute("donationTotal", donationTotal);
 
-            request.getRequestDispatcher("/admin-index.jsp").forward(request, response);
-
-        } catch (SQLException e) {
-            throw new ServletException("Error loading admin dashboard counts", e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("availablePets", 0);
+            request.setAttribute("adoptedPets", 0);
+            request.setAttribute("pendingApps", 0);
+            request.setAttribute("donationTotal", 0.0);
         }
+
+        request.getRequestDispatcher("/admin-index.jsp").forward(request, response);
     }
 }

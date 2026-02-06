@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pusak Kamek - Login</title>
+    <title>Pusak Kamek - Sign in</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 
@@ -45,7 +45,7 @@
             align-items:stretch;
         }
 
-        /* Left brand panel (like real product login) */
+        /* Left brand panel (USER-FACING) */
         .brand-panel{
             border-radius:26px;
             padding:34px;
@@ -87,7 +87,7 @@
             margin:0;
             color: rgba(255,255,255,.86);
             font-weight:600;
-            max-width: 36ch;
+            max-width: 44ch;
         }
 
         .feature-list{
@@ -124,12 +124,11 @@
             inset:auto -120px -180px -120px;
             height:420px;
             background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.18), transparent 55%);
-            filter: blur(0px);
             transform: rotate(-8deg);
             opacity:.9;
         }
 
-        /* Right login card (Google-ish clean form) */
+        /* Right login card */
         .login-card{
             background:var(--card);
             border-radius:26px;
@@ -266,6 +265,22 @@
         .btn:hover{ transform: translateY(-1px); }
         .btn:active{ transform: translateY(0px); }
 
+        /* secondary button for register */
+        .btn-outline{
+            padding:14px;
+            border-radius:14px;
+            border:1px solid var(--line);
+            background:#fff;
+            color:var(--brand-maroon);
+            font-weight:900;
+            cursor:pointer;
+            transition:.2s;
+        }
+        .btn-outline:hover{
+            background:#fdf0f1;
+            border-color: rgba(122,0,25,.25);
+        }
+
         .error-message{
             margin-top:10px;
             padding:10px 12px;
@@ -299,38 +314,38 @@
 
 <div class="wrap">
 
-    <!-- Brand side -->
+    <!-- User-facing brand side -->
     <section class="brand-panel">
         <div class="brand-badge">
             <span class="brand-dot"></span>
-            PUSAK KAMEK • ADMIN / STAFF
+            PUSAK KAMEK • ADOPTION & CARE
         </div>
 
-        <h2 class="brand-title">Welcome back.</h2>
+        <h2 class="brand-title">Find your new best friend.</h2>
         <p class="brand-sub">
-            Log in to manage pets, track adoptions, and update listings — fast and simple.
+            Sign in to explore pets, save favourites, and track your adoption journey — all in one place.
         </p>
 
         <ul class="feature-list">
             <li class="feature">
                 <div class="icon">🐾</div>
                 <div>
-                    <b>Pet Listings</b>
-                    <span>Add, edit, and keep all resident info updated.</span>
+                    <b>Browse Pets</b>
+                    <span>See available cats, dogs, and more with full details.</span>
                 </div>
             </li>
             <li class="feature">
-                <div class="icon">📌</div>
+                <div class="icon">❤️</div>
                 <div>
-                    <b>Adoption Requests</b>
-                    <span>Review applications and approve decisions easily.</span>
+                    <b>Save Favourites</b>
+                    <span>Keep a list of pets you love and revisit anytime.</span>
                 </div>
             </li>
             <li class="feature">
-                <div class="icon">🛡️</div>
+                <div class="icon">📄</div>
                 <div>
-                    <b>Secure Access</b>
-                    <span>Your data stays protected with session-based login.</span>
+                    <b>Track Applications</b>
+                    <span>Submit adoption requests and check status easily.</span>
                 </div>
             </li>
         </ul>
@@ -349,7 +364,7 @@
         </div>
 
         <h1>Sign in</h1>
-        <p>Use your admin/staff account to continue to the dashboard.</p>
+        <p>Use your account to continue.</p>
 
         <form action="<%= request.getContextPath() %>/LoginServlet" method="post" autocomplete="on">
             <div class="field">
@@ -364,10 +379,16 @@
 
             <div class="row">
                 <a class="small-link" href="#" onclick="return false;">Forgot password?</a>
-                <a class="small-link" href="<%= request.getContextPath() %>/admin-login.jsp" style="opacity:.0; pointer-events:none;">.</a>
             </div>
 
             <button class="btn" type="submit">Sign in</button>
+
+            <!-- ✅ Register button -->
+            <!-- Change register.jsp to your actual register page -->
+            <button class="btn-outline" type="button"
+                    onclick="window.location.href='<%= request.getContextPath() %>/register.jsp'">
+                Create new account
+            </button>
         </form>
 
         <%
@@ -380,7 +401,7 @@
         %>
 
         <div class="foot">
-            © <%= java.time.Year.now() %> Pusak Kamek • Admin Panel
+            © <%= java.time.Year.now() %> Pusak Kamek
         </div>
     </section>
 
